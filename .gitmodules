@@ -1,3 +1,6 @@
 [submodule "subgraphs"]
 	path = subgraphs
 	url = https://github.com/Zero-Tang/subgraphs
+[submodule "OpenSea"]
+	path = OpenSea
+	url = https://github.com/Zero-Tang/OpenSea
