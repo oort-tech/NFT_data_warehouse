@@ -16,11 +16,4 @@ w3=web3.Web3(web3.Web3.WebsocketProvider("ws://localhost:8546"))
 # w3=web3.Web3(web3.Web3.EthereumTesterProvider())
 print(w3.is_connected())
 print_users()
-blk=w3.eth.get_block("latest",True)
-for tx in blk.transactions:
-	print(tx)
-tx_hash=w3.eth.send_transaction({"from":w3.eth.accounts[0],"to":w3.eth.accounts[1],"value":w3.to_wei(3,"ether")})
-print_users()
-blk=w3.eth.get_block("latest",True)
-for tx in blk.transactions:
-	print("From: {} To: {}".format(tx['from'],tx['to']))
+print(w3.eth.syncing)

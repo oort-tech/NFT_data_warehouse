@@ -1,0 +1,3 @@
+[submodule "subgraphs"]
+	path = subgraphs
+	url = https://github.com/Zero-Tang/subgraphs
