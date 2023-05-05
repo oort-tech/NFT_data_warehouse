@@ -6,8 +6,8 @@ const ZERO_12 = "0x000000000000000000000000"
 const ZERO_4 = "0x00000000"
 
 // WyvernExchange address
-const exchangeAddress = "0xfB95965fecB2A91d4D0F118E8ACCfB40C9DE60E7"
-const nftAddr = "0x1429Cec35d0FbcD73172644Ed0E1b73E5C929962"
+const exchangeAddress = "0xfcBAa1783323B6f2DF2fe88e24f01E8cE491daFf"
+const nftAddr = "0xaEfc1018dD0010b842c6290A105B70C5BF35632F"
 
 // Buyer and seller
 const maker = "0xc90a9b3f192fE528070Fc32d1ec1155f4F70AB29"
@@ -18,7 +18,7 @@ const randomUint1 = 1234
 const randomUint2 = 2234
 
 // Misc params
-const functionSelector = "0x23b872dd" // transferFrom(address _from, address _to, uint256 _tokenId)
+const functionSelector = "0x23b872dd" // transferFrom(address _from, address _to, uint256 _tokenId) directly calling on NFT
 
 const tokenId = 0
 
@@ -114,8 +114,8 @@ const order = {
         // buy.saleKind (0 - fixed price, 1 - dutch auction)
         0,
         // buy.howToCall (0 - call, 1 - delegated call)
-        // TODO: not sure about this
-        1,
+        // Use direct call because we are calling the NFT directly
+        0,
         // sell.feeMethod (0 - split fee, 1 - maker pays)
         1,
         // sell.side (0 - sell side, 1 - buy side)
@@ -123,12 +123,12 @@ const order = {
         // sell.saleKind (0 - fixed price, 1 - dutch auction)
         0,
         // sell.howToCall (0 - call, 1 - delegated call)
-        1,
+        0,
     ],
-    calldataBuy: `0x${functionSelector.slice(2)}${ZERO_12.slice(2)}${ZERO_32.slice(2)}${maker.slice(2)}${ZERO_12.slice(2)}${nftAddr.slice(2)}${intToPaddedHex(tokenId)}`,
-    calldataSell: `0x${functionSelector.slice(2)}${ZERO_12.slice(2)}${taker.slice(2)}${ZERO_12.slice(2)}${ZERO_32.slice(2)}${nftAddr.slice(2)}${intToPaddedHex(tokenId)}`,
-    replacementPatternBuy: `0x${ZERO_4.slice(2)}${MAX_32.slice(2)}${ZERO_32.slice(2)}${ZERO_32.slice(2)}${ZERO_32.slice(2)}`,
-    replacementPatternSell: `0x${ZERO_4.slice(2)}${ZERO_32.slice(2)}${MAX_32.slice(2)}${ZERO_32.slice(2)}${ZERO_32.slice(2)}`,
+    calldataBuy: `0x${functionSelector.slice(2)}${ZERO_32.slice(2)}${ZERO_12.slice(2)}${maker.slice(2)}${intToPaddedHex(tokenId)}`,
+    calldataSell: `0x${functionSelector.slice(2)}${ZERO_12.slice(2)}${taker.slice(2)}${ZERO_32.slice(2)}${intToPaddedHex(tokenId)}`,
+    replacementPatternBuy: `0x${ZERO_4.slice(2)}${MAX_32.slice(2)}${ZERO_32.slice(2)}${ZERO_32.slice(2)}`,
+    replacementPatternSell: `0x${ZERO_4.slice(2)}${ZERO_32.slice(2)}${MAX_32.slice(2)}${ZERO_32.slice(2)}`,
     staticExtradataBuy: "0x0", // all zeros
     staticExtradataSell: "0x0", // all zeros
     // vs and rssMetadata are for Signature validation, in our dev version of OpenSea contract,
@@ -163,4 +163,15 @@ module.exports = async function(exchange) {
     console.log(result)
 }
 
-// await require("./orders/SimpleNft_1.js")(await WyvernExchange.deployed())
+// const exchange = await WyvernExchange.deployed()
+// await require("./orders/SimpleNft_1.js")(exchange)
+
+
+// 0x23b872dd
+// 000000000000000000000000c90a9b3f192fe528070fc32d1ec1155f4f70ab29
+// 000000000000000000000000c90a9b3f192fe528070fc32d1ec1155f4f70ab29
+// 0000000000000000000000000000000000000000000000000000000000000000
+
+// 0x23b872dd000000000000000000000000c90a9b3f192fe528070fc32d1ec1155f4f70ab29000000000000000000000000c90a9b3f192fe528070fc32d1ec1155f4f70ab290000000000000000000000000000000000000000000000000000000000000000
+
+

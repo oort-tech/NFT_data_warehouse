@@ -1346,6 +1346,22 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
     }
 
     /**
+     * DEBUG DATA START
+     */
+
+    mapping(uint => AuthenticatedProxy.HowToCall) public debugHowToCalls;
+
+    mapping(uint => bytes) public debugBytes;
+
+    mapping(uint => address) public debugAddress;
+
+    mapping(uint => bool) public debugBools;
+
+    /**
+     * DEBUG DATA END
+     */
+
+    /**
      * @dev Atomically match two orders, ensuring validity of the match, and execute all associated state transitions. Protected against reentrancy by a contract-global lock.
      * @param buy Buy-side order
      * @param buySig Buy-side order signature
@@ -1421,9 +1437,12 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
         /* Execute funds transfer and pay fees. */
         uint price = executeFundsTransfer(buy, sell);
 
-        // Local-Dev-Only: just call locally instead of via a proxy
         /* Execute specified call through proxy. */
-        // require(proxy(sell.target, sell.howToCall, sell.calldata), "failed to call proxy");
+        require(proxyCall(sell.target, sell.howToCall, sell.calldata), "failed to call proxy");
+
+        debugAddress[0] = sell.target;
+        debugHowToCalls[0] = sell.howToCall;
+        debugBytes[0] = sell.calldata;
 
         /* Static calls are intentionally done after the effectful call so they can check resulting state. */
 
@@ -1451,8 +1470,8 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
      * @param calldata Calldata to send
      * @return Result of the call (success or failure)
      */
-    function proxy(address dest,  AuthenticatedProxy.HowToCall howToCall, bytes calldata)
-        internal
+    function proxyCall(address dest,  AuthenticatedProxy.HowToCall howToCall, bytes calldata)
+        public
         returns (bool result)
     {
         if (howToCall ==  AuthenticatedProxy.HowToCall.Call) {
@@ -1461,6 +1480,26 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
             result = dest.delegatecall(calldata);
         }
         return result;
+    }
+
+    function proxyDelegateCall(address dest, bytes calldata)
+        public
+        returns (bool)
+    {
+        bool ret = dest.delegatecall(calldata);
+        debugBools[0] = true;
+        debugBools[0] = ret;
+        return ret;
+    }
+
+    function proxyCall(address dest, bytes calldata)
+        public
+        returns (bool)
+    {
+        bool ret = dest.call(calldata);
+        debugBools[0] = true;
+        debugBools[0] = ret;
+        return ret;
     }
 
 }
