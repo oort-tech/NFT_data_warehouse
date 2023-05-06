@@ -53,11 +53,18 @@ module.exports = {
     makeOrder: function (
         exchangeAddr,
         nftAddr,
-        maker,
-        taker,
+        seller,
+        buyer,
         price, // in wei
         calldata, // create using `generateCalldata`
         {
+            // If is sell side order (typically direct buy):
+            // - buy.maker == sell.taker -> the buyer
+            // - buy.taker == sell.maker -> the seller
+            // If is buy side order (typically auction, when buyer place a bid):
+            // - buy.maker == sell.taker -> the seller
+            // - buy.taker == sell.maker -> the buyer
+            isSellSideOrder = true, 
             paymentToken = emptyHex(20), // 0 is ETH
             feeMethod = CONSTANTS.FEE_METHOD_SPLIT,
             buySaleKind = CONSTANTS.SALE_FIXED,
@@ -85,10 +92,10 @@ module.exports = {
             addrs: [
                 // Exchange address
                 exchangeAddr,
-                // buy.maker -> seller of the NFT
-                maker,
-                // buy.taker -> buyer of the NFT
-                taker,
+                // buy.maker
+                isSellSideOrder ? buyer : seller,
+                // buy.taker
+                isSellSideOrder ? seller : buyer,
                 // buy.feeRecepient -> ZERO if is split fee method, otherwise need to define a recipient address to receive payment
                 buyFeeRecipient,
                 // buy.target -> target to call to execute the transfer, we just use nftAddr in all cases to simplify, we removed MerkleValidator in our dev contract
@@ -99,10 +106,10 @@ module.exports = {
                 paymentToken,
                 // sell.exchange, same as buyer in our case, it's always OpenSea
                 exchangeAddr,
-                // sell.maker -> buyer of the NFT
-                taker,
-                // sell.taker -> typically empty
-                emptyHex(20),
+                // sell.maker
+                isSellSideOrder ? seller : buyer,
+                // sell.taker
+                isSellSideOrder ? buyer : seller,
                 // sell.feeRecipient -> if ETH is used to pay relay fee, it has to be non-zero
                 sellFeeRecipient,
                 // sell.target -> just has to match buy.target
@@ -197,13 +204,13 @@ module.exports = {
     generateCallData: function (functionSelector, ...args) {
         switch (functionSelector) {
             case CONSTANTS.TRANSFER_FROM_BYTE_CODE:
-                let [maker, taker, tokenId] = args
-                if (maker.startsWith("0x")) maker = maker.slice(2)
-                if (taker.startsWith("0x")) taker = taker.slice(2)
+                let [from, to, tokenId] = args
+                if (from.startsWith("0x")) from = from.slice(2)
+                if (to.startsWith("0x")) to = to.slice(2)
                 return {
-                    buyCalldata: `0x${functionSelector}${emptyHex(32)}${emptyHex(12)}${maker}${intToPaddedHex(tokenId)}`,
+                    buyCalldata: `0x${functionSelector}${emptyHex(32)}${emptyHex(12)}${to}${intToPaddedHex(tokenId)}`,
                         buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}`,
-                        sellCalldata: `0x${functionSelector}${emptyHex(12)}${taker}${emptyHex(32)}${intToPaddedHex(tokenId)}`,
+                        sellCalldata: `0x${functionSelector}${emptyHex(12)}${from}${emptyHex(32)}${intToPaddedHex(tokenId)}`,
                         sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}`
                 }
 

@@ -1,10 +1,8 @@
 const { makeOrder, generateCallData, CONSTANTS } = require("./utils");
 
 // BEGIN: ORDER PARAMETERS; MODIFY THEM ACCORDINGLY
-// maker == seller
-const maker = "0xc90a9b3f192fE528070Fc32d1ec1155f4F70AB29"
-// taker == buyer
-const taker = "0xc90a9b3f192fE528070Fc32d1ec1155f4F70AB29"
+const seller = "0xc90a9b3f192fE528070Fc32d1ec1155f4F70AB29"
+const buyer = "0x09dD1D0088B6934F04505cEe81b6E80e82d2c888"
 // third party broker to receive transaction fees
 const broker = "0xEfcE2efE40DECCcf0F763a2FB8CdB4b89Fd7f622"
 // function selector to generate calldata to perform NFT transfer
@@ -22,11 +20,12 @@ module.exports = async function(exchange, nftAddr, tokenId) {
     const order = makeOrder(
         exchange.address,
         nftAddr,
-        maker,
-        taker,
+        seller,
+        buyer,
         price,
-        generateCallData(functionSelector, maker, taker, tokenId),
+        generateCallData(functionSelector, seller, buyer, tokenId),
         {
+            isSellSideOrder: true, // direct purchase
             sellFeeRecipient: broker
         }
     )
@@ -51,8 +50,3 @@ module.exports = async function(exchange, nftAddr, tokenId) {
 
     console.log(result)
 }
-
-// const nft = await SimpleNft.deployed()
-
-// const exchange = await WyvernExchange.deployed()
-// await require("./orders/SimpleNft_1.js")(exchange, "0x025e230b2e94B89c8bC0b1e9E6E416BDd36ce5D7", 0)

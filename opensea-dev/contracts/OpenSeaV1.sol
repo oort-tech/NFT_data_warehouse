@@ -1438,6 +1438,7 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
         uint price = executeFundsTransfer(buy, sell);
 
         /* Execute specified call through proxy. */
+        // Local-Dev-Only: instead of using proxy, just call directly!
         require(proxyCall(sell.target, sell.howToCall, sell.calldata), "failed to call proxy");
 
         // debugAddress[0] = sell.target;
