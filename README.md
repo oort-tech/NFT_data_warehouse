@@ -12,7 +12,7 @@ TODO: write a bunch of unit tests to test our function handling.
 For the intergration test, we want to simulate several (almost) real NFT trading scenarios on our test blockchain network, and check if our indexer can work seamlessly with those.
 ### Dependencies
 1. A local Graph Node server. Follow the github [instructions](https://github.com/graphprotocol/graph-node) to install. This allows us to have a local graph node that can index our test network. Along this process you will need to set up a IPFS and a local PostgresDB as well.
-2. A local OpenEthereum server. Follow the github [instructions ](https://github.com/openethereum/openethereum/releases/tag/v3.3.5) to install. This allows us to bootstrap a local Ethereum private blockchain which supports the [trace](https://openethereum.github.io/JSONRPC-trace-module) module. Not all blockchain implementation supports this `trace` module (e.g. Ganache), but it is important for us to use one that is compatible because only those implementations support using `callHandlers` in the Graph protocol ([reference](https://thegraph.com/docs/en/operating-graph-node/#network-clients)), which is the foundation of our indexer.
+2. A local OpenEthereum server. Follow the github [instructions ](https://github.com/openethereum/openethereum/releases/tag/v3.3.5) to install. This allows us to bootstrap a local Ethereum private blockchain which supports the [trace](https://openethereum.github.io/JSONRPC-trace-module) module. Not all blockchain implementation supports this `trace` module (e.g. Ganache), but it is important for us to use one that is compatible because only those implementations support using `callHandlers` in the Graph protocol ([reference](https://thegraph.com/docs/en/operating-graph-node/#network-clients)), which is the foundation of our indexer. The prodution Ethereum mainnet also supports this module.
 3. [Truffle](https://www.npmjs.com/package/truffle). This allows us to easily deploy our local [OpenSea smart contract](./opensea-dev/contracts/OpenSeaV1.sol) and [same NFT contracts](./opensea-nft-dev/contracts/) to our test network.
 4. [The Graph SDK](https://www.npmjs.com/package/@graphprotocol/graph-ts). This is the framework that can help us assemble and deploy our subgraph to our local graph node.
 
@@ -48,9 +48,9 @@ $ cargo run -p graph-node --release -- \
 
 Change `$USERNAME` to your local PostgresDB username, `PASS` to your local PostgresDB password and `DBNAME` to a new database you've created for storing the subgraph data.
 
-Alternatively you may use the Docker setup, but make sure to change the `--ethereum-rpc` argument to point to the right blockchain.
-
 Also note that `mainnet:http://localhost:8545` should be the JSON-RPC endpoint for your local OpenEthereum blockchain.
+
+Alternatively you may use the Docker setup, but make sure to change the `--ethereum-rpc` argument to point to the right local OpenEthereum blockchain.
 
 ### Deploy Sample Contracts
 #### Intro - NFT Contracts
@@ -85,7 +85,7 @@ Assuming we only have `SimpleNft.sol` under `opensea-nft-dev/contracts`, the abo
    ---------------------
    > transaction hash:    0xe886dd81bc64959584778a47e5c69519f35a9fc9aba26d9172a62e5aa7af8e71
    > Blocks: 0            Seconds: 0
-   > **contract address**:    0x289Ff5674D83f66DBc5Cb0AC09096e905A4B7E68
+   > contract address:    0x289Ff5674D83f66DBc5Cb0AC09096e905A4B7E68
    > block number:        78
    > block timestamp:     1683334281
    > account:             0xc90a9b3f192fE528070Fc32d1ec1155f4F70AB29
@@ -110,7 +110,7 @@ We run the following:
 ```sh
 $ cd opensea-dev;
 # Migrate would compile the OpenSeaV1 contracts and deploy to the blockchain.
-$ truffle migrate --network openth;
+$ truffle migrate --network openeth;
 ```
 
 The above command should generate something like:
@@ -146,7 +146,7 @@ This is a simple order that is:
 Order paramters (e.g. from address, to address, base price, etc) can be configured in the corresponding JS file.
 
 ##### Step 1: Prepare The NFT For Trading
-Assuming the NFT contract is deployed above, We first need to `mint()` the NFT to an address to create a new token id (starts from `0`, think of this as an item in a collection) and declare an owner address for that particular token id:
+Assuming the NFT contract is deployed above, We first need to `mint()` the NFT to an address to create a new token id (starts from `0` and incrementing, think of this as an item in a collection) and declare an owner address for that particular token id:
 ```sh
 $ cd opensea-nft-dev;
 $ truffle console --network openeth;
@@ -179,9 +179,9 @@ $ truffle console --network openeth
 # grab the exchange contract instance
 $ truffle(openeth) const exchange = await WyvernExchange.deployed()
 # execute the order
-$ truffle(openeth) await require("./orders/SimpleNft_1.js")(exchange, "$NFT_ADDRESS", 0)
+$ truffle(openeth) await require("./orders/SimpleNft_1.js")(exchange, "$NFT_ADDRESS", "$TOKEN_ID")
 ```
-where `$NFT_ADDRESS` should be the `SimpleNFT` contract address you noted down in previous steps.
+where `$NFT_ADDRESS` should be the `SimpleNFT` contract address you noted down in previous steps, and `$TOKEN_ID` is the token id you just minted (should be `0` for the first time).
 
 This should execute the sample order and make the data available for indexing later!
 
