@@ -1,5 +1,5 @@
 const SimpleNFT = artifacts.require("SimpleNFT");
 
-module.exports = function (deployer) {
-    deployer.deploy(SimpleNFT);
+module.exports = async function (deployer) {
+    await deployer.deploy(SimpleNFT);
 };

@@ -1440,9 +1440,9 @@ contract ExchangeCore is ReentrancyGuarded, Ownable {
         /* Execute specified call through proxy. */
         require(proxyCall(sell.target, sell.howToCall, sell.calldata), "failed to call proxy");
 
-        debugAddress[0] = sell.target;
-        debugHowToCalls[0] = sell.howToCall;
-        debugBytes[0] = sell.calldata;
+        // debugAddress[0] = sell.target;
+        // debugHowToCalls[0] = sell.howToCall;
+        // debugBytes[0] = sell.calldata;
 
         /* Static calls are intentionally done after the effectful call so they can check resulting state. */
 
