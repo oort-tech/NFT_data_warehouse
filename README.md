@@ -1,3 +1,15 @@
+# E6883_project_ky2513
+This Project is about NFT Marketplace Smart Contract Development. 
+****
+****
+MyNFT.sol is the smart contract. 
+****
+MyNFT.js is the test case file.
+****
+2_deploy_mynft.js is migrate file which interact with truffle-config.js.
+****
+
+
 # NFTVerse Data Warehouse
 
 ## Overview:
