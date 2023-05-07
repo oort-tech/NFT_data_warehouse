@@ -449,8 +449,8 @@ export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAdd
       }
       asset.tokenId = tokenId;
       asset.collection = collectionAddr;
-      asset.save();
     }
+    asset.save();
   }
   return asset;
 }
