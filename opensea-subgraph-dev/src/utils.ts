@@ -447,9 +447,9 @@ export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAdd
       if (!erc1155TokenURIResult.reverted) {
         asset.tokenURI = erc1155TokenURIResult.value;
       }
-      asset.tokenId = tokenId;
-      asset.collection = collectionAddr;
     }
+    asset.tokenId = tokenId;
+    asset.collection = collectionAddr;
     asset.save();
   }
   return asset;
