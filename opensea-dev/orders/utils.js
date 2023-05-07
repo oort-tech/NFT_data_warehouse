@@ -4,7 +4,9 @@
 
 const CONSTANTS = {
     // transferFrom(address _from, address _to, uint256 _tokenId)
-    TRANSFER_FROM_BYTE_CODE: "23b872dd",
+    TRANSFER_FROM_SELECTOR: "23b872dd",
+    // MerkleValidator.matchERC721UsingCriteria(address from, address to, IERC721 token, uint256 tokenId, bytes32 root, bytes32[] proof)
+    MATCH_ERC721_TRANSFER_FROM_SELECTOR: "fb16a595",
 
     FEE_METHOD_SPLIT: 1,
     FEE_METHOD_PROTOCOL: 0,
@@ -43,6 +45,20 @@ function maxHex(size, withPrefix = false) {
     return (withPrefix ? "0x" : "") + 'f'.repeat(size * 2)
 }
 
+/**
+ * Padd an address to size * bytes
+ */
+function paddedAddress(addr, size = 32, withPrefix = false) {
+    if (addr.startsWith("0x")) addr = addr.slice(2)
+    return (withPrefix ? "0x" : "") + '0'.repeat(size * 2 - addr.length) + addr
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+}
+
 module.exports = {
 
     CONSTANTS: CONSTANTS,
@@ -64,7 +80,10 @@ module.exports = {
             // If is buy side order (typically auction, when buyer place a bid):
             // - buy.maker == sell.taker -> the seller
             // - buy.taker == sell.maker -> the buyer
-            isSellSideOrder = true, 
+            isSellSideOrder = true,
+            // (0 - call, 1 - delegated call)
+            howToCall = 0,
+            delegatedTarget = emptyHex(20),
             paymentToken = emptyHex(20), // 0 is ETH
             feeMethod = CONSTANTS.FEE_METHOD_SPLIT,
             buySaleKind = CONSTANTS.SALE_FIXED,
@@ -98,8 +117,9 @@ module.exports = {
                 isSellSideOrder ? seller : buyer,
                 // buy.feeRecepient -> ZERO if is split fee method, otherwise need to define a recipient address to receive payment
                 buyFeeRecipient,
-                // buy.target -> target to call to execute the transfer, we just use nftAddr in all cases to simplify, we removed MerkleValidator in our dev contract
-                nftAddr,
+                // buy.target -> target to call to execute the transfer
+                // if is direct call, use the nft address, otherwise we delegate call to the delegatedTarget
+                howToCall == 0 ? nftAddr : delegatedTarget,
                 // buy.staticTarget -> typically empty
                 emptyHex(20),
                 // buy.paymentToken -> Zero means Ether
@@ -113,7 +133,7 @@ module.exports = {
                 // sell.feeRecipient -> if ETH is used to pay relay fee, it has to be non-zero
                 sellFeeRecipient,
                 // sell.target -> just has to match buy.target
-                nftAddr,
+                howToCall == 0 ? nftAddr : delegatedTarget,
                 // sell.staticTarget -> typically zero
                 emptyHex(20),
                 // sell.paymentToken -> Zero means Ether
@@ -137,7 +157,7 @@ module.exports = {
                 // buy.expirationTime, 0 means no expiration
                 buyExpirationTime,
                 // buy.salt - doesn't matter
-                1234,
+                getRandomIntInclusive(0, 10000),
                 // sell.makerRelayFee -> ditto, but if sell side order is maker, same for above
                 sellMakerRelayFee,
                 // seller.takerRelayFee
@@ -155,7 +175,7 @@ module.exports = {
                 // seller.expirationTime
                 sellExpirationTime,
                 // seller.salt - doesn't matter
-                4321
+                getRandomIntInclusive(0, 10000)
             ],
             feeMethodsSidesKindsHowToCalls: [
                 // buy.feeMethod (0 - maker pays, 1 - split fee)
@@ -165,8 +185,7 @@ module.exports = {
                 // buy.saleKind (0 - fixed price, 1 - dutch auction)
                 buySaleKind,
                 // buy.howToCall (0 - call, 1 - delegated call)
-                // Use direct call because we are calling the NFT directly, we don't support MerkleValidator as immediary proxy.
-                0,
+                howToCall,
                 // sell.feeMethod (0 - maker pays, 1 - split fee), must match buy.feeMethod
                 feeMethod,
                 // sell.side (0 - sell side, 1 - buy side)
@@ -174,7 +193,7 @@ module.exports = {
                 // sell.saleKind (0 - fixed price, 1 - dutch auction)
                 sellSaleKind,
                 // sell.howToCall (0 - call, 1 - delegated call)
-                0,
+                howToCall,
             ],
             calldataBuy: calldata.buyCalldata,
             calldataSell: calldata.sellCalldata,
@@ -193,7 +212,13 @@ module.exports = {
                 emptyHex(32, withPrefix = true),
                 emptyHex(32, withPrefix = true),
                 emptyHex(32, withPrefix = true)
-            ]
+            ],
+            // A select set of important data
+            keyData: {
+                howToCall: howToCall,
+                delegatedTarget: delegatedTarget,
+                aggregatedCallData: calldata.aggregated
+            }
         }
     },
 
@@ -202,20 +227,39 @@ module.exports = {
      * @returns [buy.calldata, sell.calldata, buy.replacementPattern, sell.replacementPattern]
      */
     generateCallData: function (functionSelector, ...args) {
-        switch (functionSelector) {
-            case CONSTANTS.TRANSFER_FROM_BYTE_CODE:
-                let [from, to, tokenId] = args
-                if (from.startsWith("0x")) from = from.slice(2)
-                if (to.startsWith("0x")) to = to.slice(2)
-                return {
-                    buyCalldata: `0x${functionSelector}${emptyHex(32)}${emptyHex(12)}${to}${intToPaddedHex(tokenId)}`,
-                        buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}`,
-                        sellCalldata: `0x${functionSelector}${emptyHex(12)}${from}${emptyHex(32)}${intToPaddedHex(tokenId)}`,
-                        sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}`
-                }
-
-                default:
-                    throw new Error(`Does not support function selector ${functionSelector}`)
+        if (functionSelector == CONSTANTS.TRANSFER_FROM_SELECTOR) {
+            let [from, to, tokenId] = args
+            if (from.startsWith("0x")) from = from.slice(2)
+            if (to.startsWith("0x")) to = to.slice(2)
+            return {
+                buyCalldata: `0x${functionSelector}${emptyHex(32)}${paddedAddress(to)}${intToPaddedHex(tokenId)}`,
+                    buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}`,
+                    sellCalldata: `0x${functionSelector}${paddedAddress(from)}${emptyHex(32)}${intToPaddedHex(tokenId)}`,
+                    sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}`
+            }
+        } else if (functionSelector == CONSTANTS.MATCH_ERC721_TRANSFER_FROM_SELECTOR) {
+            let [from, to, token, tokenId] = args
+            let root = proof = emptyHex(32)
+            if (from.startsWith("0x")) from = from.slice(2)
+            if (to.startsWith("0x")) to = to.slice(2)
+            return {
+                buyCalldata: `0x${functionSelector}${emptyHex(32)}${paddedAddress(to)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`,
+                buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
+                sellCalldata: `0x${functionSelector}${paddedAddress(from)}${emptyHex(32)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`,
+                sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
+                aggregated: `0x${functionSelector}${paddedAddress(from)}${paddedAddress(to)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`
+            }
+        } else {
+            throw new Error(`Does not support function selector ${functionSelector}`)
         }
     }
 }
+
+// 0xfb16a595
+// 0000000000000000000000000000000000000000000000000000000000000000
+// 000000000000000000000000c78c6bb23ac77b7d19817c1c67c38675af97a5a2
+// 000000000000000000000000f1005f6379f35fe681c7c458eb4f3704ead4f14a
+// 000000000000000000000000000000000000000000000000000000000000041b
+// 0000000000000000000000000000000000000000000000000000000000000000
+// 00000000000000000000000000000000000000000000000000000000000000c0
+// 0000000000000000000000000000000000000000000000000000000000000000

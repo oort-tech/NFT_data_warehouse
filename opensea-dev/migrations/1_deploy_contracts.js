@@ -1,16 +1,16 @@
+const MerkleValidator = artifacts.require("MerkleValidator")
 const WyvernProxyRegistry = artifacts.require("WyvernProxyRegistry")
 const WyvernTokenTransferProxy = artifacts.require("WyvernTokenTransferProxy")
-const WyvernToken = artifacts.require("WyvernToken")
-const WyvernDAOProxy = artifacts.require("WyvernDAOProxy")
+const EveryOneIsRichWyvernToken = artifacts.require("EveryOneIsRichWyvernToken")
 const WyvernExchange = artifacts.require("WyvernExchange");
 
-module.exports = async function (deployer, network, accounts) {
-    const dummyMerkleRoot = "0xbfdda2cdd0ddffbde454c05ba311161075f0baa7ee43681b8cd44669883ba445"
-    const dummyTotalUtxoAmount = "185976814178002"
+// A preset account in `private_chain.json` with 0 balance
+const protocolFeeRecipient = "0xEfcE2efE40DECCcf0F763a2FB8CdB4b89Fd7f622"
 
+module.exports = async function (deployer, network, accounts) {
+    await deployer.deploy(MerkleValidator)
     await deployer.deploy(WyvernProxyRegistry)
     await deployer.deploy(WyvernTokenTransferProxy, WyvernProxyRegistry.address)
-    await deployer.deploy(WyvernToken, dummyMerkleRoot, dummyTotalUtxoAmount)
-    await deployer.deploy(WyvernDAOProxy)
-    await deployer.deploy(WyvernExchange, WyvernProxyRegistry.address, WyvernTokenTransferProxy.address, WyvernToken.address, WyvernDAOProxy.address);
+    await deployer.deploy(EveryOneIsRichWyvernToken)
+    await deployer.deploy(WyvernExchange, WyvernProxyRegistry.address, WyvernTokenTransferProxy.address, EveryOneIsRichWyvernToken.address, protocolFeeRecipient);
 }
