@@ -77,6 +77,7 @@ To deploy these sample contracts, we do the following:
 First in one terminal session, let's deploy the NFT contracts:
 ```sh
 $ cd opensea-nft-dev;
+$ npm install;
 # Migrate would compile the contracts and deploy to the blockchain.
 $ truffle migrate --network openeth
 ```
@@ -113,6 +114,7 @@ Then, in **another** terminal session, let's deploy the OpenSea marketplace cont
 We run the following:
 ```sh
 $ cd opensea-dev;
+$ npm install;
 # Migrate would compile the OpenSeaV1 contracts and deploy to the blockchain.
 $ truffle migrate --network openeth;
 # Fix a bug in Truffle that could make console unable to open!
@@ -203,7 +205,7 @@ $ truffle console --network openeth
 # grab the exchange contract instance
 $ truffle(openeth) const exchange = await WyvernExchange.deployed()
 # execute the order
-$ truffle(openeth) const { buildOrder, executeOrder } = require("./orders/SimpleNft_2.js")
+$ truffle(openeth) const { buildOrder, executeOrder } = require("./orders/SimpleNft_1.js")
 $ truffle(openeth) var order = buildOrder(exchange, "$NFT_ADDR", "$TOKEN_ID")
 $ truffle(openeth) executeOrder(exchange, order)
 ```
