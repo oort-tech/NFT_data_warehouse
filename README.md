@@ -179,10 +179,10 @@ Assuming the NFT contract is deployed above, We first need to `mint()` the NFT t
 $ cd opensea-nft-dev;
 $ truffle console --network openeth;
 $ truffle(openeth) const nft = await SimpleNFT.deployed()
-$ truffle(openeth) nft.mint("$MAKER_ADDRESS")
+$ truffle(openeth) nft.mint("$MAKER_ADDR")
 $ ...
 ```
-where `$MAKER_ADDRESS` is typicall the owner of this token, you may use one of the sample addresses defined in `private_chain.json`. The order JS file should've already defined one for you.
+where `$MAKER_ADDR` is typicall the owner of this token, you may use one of the sample addresses defined in `private_chain.json`. The order JS file should've already defined one for you.
 
 This would mint the fresh NFT and make token id `0` available for trading.
 
@@ -211,6 +211,46 @@ $ truffle(openeth) executeOrder(exchange, order)
 ```
 where `$NFT_ADDRESS` should be the `SimpleNFT` contract address you noted down in previous steps, and `$TOKEN_ID` is the token id you just minted (should be `0` for the first time).
 
+It should shown something like:
+```
+{
+  tx: '0xd13ef4e97e8d07fb4e7e162cf60a76264509763b105b1e8c7d0d756839f6e368',
+  receipt: {
+    blockHash: '0xb4c56d591eadebfb8e3e8a60d1e8b881bee3752b0e02d7469da9f62f7726da9e',
+    blockNumber: 258,
+    contractAddress: null,
+    cumulativeGasUsed: 252163,
+    effectiveGasPrice: 0,
+    from: '0xc90a9b3f192fe528070fc32d1ec1155f4f70ab29',
+    gasUsed: 252163,
+    logs: [ [Object] ],
+    logsBloom: '0x00000000000000000000200000000000000000000000000000000000004000000000000014000000000040000000000000000000000000000004000020000000000100000000000000000008000000000000000000000000000000000000000000000000020000000000000000000800000000000000000000000210000008000000000000000000000100000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000001000000040000002000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000200000000000000000000000',
+    status: true,
+    to: '0x1f36edc2a86402d1d1316c78206bf8ab6139e3f9',
+    transactionHash: '0xd13ef4e97e8d07fb4e7e162cf60a76264509763b105b1e8c7d0d756839f6e368',
+    transactionIndex: 0,
+    type: '0x0',
+    rawLogs: [ [Object], [Object] ]
+  },
+  logs: [
+    {
+      address: '0x1f36eDc2A86402d1D1316c78206Bf8Ab6139E3F9',
+      blockHash: '0xb4c56d591eadebfb8e3e8a60d1e8b881bee3752b0e02d7469da9f62f7726da9e',
+      blockNumber: 258,
+      logIndex: 1,
+      removed: false,
+      transactionHash: '0xd13ef4e97e8d07fb4e7e162cf60a76264509763b105b1e8c7d0d756839f6e368',
+      transactionIndex: 0,
+      transactionLogIndex: '0x1',
+      type: 'mined',
+      id: 'log_e9cc06df',
+      event: 'OrdersMatched',
+      args: [Result]
+    }
+  ]
+}
+```
+
 This should execute the sample order and make the data available for indexing later!
 
 Querying the NFT owner will show the NFT is owned by the new address:
@@ -220,6 +260,7 @@ $ truffle console --network openeth
 $ truffle(openeth) nft.ownerOf(0)
 ...
 # should now change to the buyer's address!
+'0x09dD1D0088B6934F04505cEe81b6E80e82d2c888'
 ```
 
 #### Sample Order 2 `orders/SimpleNft_2.js`
@@ -236,9 +277,9 @@ Same as Sample Order 1. An simple way to extend forward is just to mint a new to
 $ cd opensea-nft-dev;
 $ truffle console --network openeth;
 $ truffle(openeth) const nft = await SimpleNFT.deployed()
-$ truffle(openeth) nft.mint("$MAKER_ADDRESS")
+$ truffle(openeth) nft.mint("$MAKER_ADDR")
 ```
-This should make token id `1` available for use.
+This should make token id `1` available for use, which is initially owned by `$MAKER_ADDR`.
 
 ##### Step 2: Execute The Order
 
@@ -255,6 +296,79 @@ $ truffle(openeth) const merkle = await MerkleValidator.deployed()
 $ truffle(openeth) const { buildOrder, executeOrder } = require("./orders/SimpleNft_2.js") # or SimpleNft_3.js
 $ truffle(openeth) var order = buildOrder(exchange, merkle, "$NFT_ADDR", "$TOKEN_ID")
 $ truffle(openeth) executeOrder(exchange, order)
+```
+where the `$NFT_ADDR` should the same one you've noted down before, and `$TOKEN_ID` should be `1` which is newly minted.
+
+It should show something like:
+```
+{
+  tx: '0xe6521627120c3ab6bdbce6efb7ba20e20ef47b649b1ed12cda1e5e566188620b',
+  receipt: {
+    blockHash: '0x340e2a00f2e8260dea38307e75c576995c77b0912702b6a7d9653e9e14ae9593',
+    blockNumber: 261,
+    contractAddress: null,
+    cumulativeGasUsed: 202316,
+    effectiveGasPrice: 0,
+    from: '0xc90a9b3f192fe528070fc32d1ec1155f4f70ab29',
+    gasUsed: 202316,
+    logs: [ [Object] ],
+    logsBloom: '0x00000000000000000000200000000000000000000000000000000000004000000000000010000000000040000000000000000000000000000004000020000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000800000000000000000000000200000000000000000000000000000100000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000001000000040000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000200000000000000000000000',
+    status: true,
+    to: '0x1f36edc2a86402d1d1316c78206bf8ab6139e3f9',
+    transactionHash: '0xe6521627120c3ab6bdbce6efb7ba20e20ef47b649b1ed12cda1e5e566188620b',
+    transactionIndex: 0,
+    type: '0x0',
+    rawLogs: [ [Object] ]
+  },
+  logs: [
+    {
+      address: '0x1f36eDc2A86402d1D1316c78206Bf8Ab6139E3F9',
+      blockHash: '0x340e2a00f2e8260dea38307e75c576995c77b0912702b6a7d9653e9e14ae9593',
+      blockNumber: 261,
+      logIndex: 0,
+      removed: false,
+      transactionHash: '0xe6521627120c3ab6bdbce6efb7ba20e20ef47b649b1ed12cda1e5e566188620b',
+      transactionIndex: 0,
+      transactionLogIndex: '0x0',
+      type: 'mined',
+      id: 'log_2cb519fa',
+      event: 'OrdersMatched',
+      args: [Result]
+    }
+  ]
+}
+{
+  tx: '0xce33921c0a195f7710a47c6a7902e5b987918063ea28d1028d49178b12358022',
+  receipt: {
+    blockHash: '0x1d5f7a11826590d7ffdbdb99bdf20405b9b5670a9b9fe201cc33eea3039b804c',
+    blockNumber: 262,
+    contractAddress: null,
+    cumulativeGasUsed: 44801,
+    effectiveGasPrice: 0,
+    from: '0xc90a9b3f192fe528070fc32d1ec1155f4f70ab29',
+    gasUsed: 44801,
+    logs: [],
+    logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000004000020040000000100000000000000000008000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000010000008000000000000000000000100000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000040000002000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000',
+    status: true,
+    to: '0x1f36edc2a86402d1d1316c78206bf8ab6139e3f9',
+    transactionHash: '0xce33921c0a195f7710a47c6a7902e5b987918063ea28d1028d49178b12358022',
+    transactionIndex: 0,
+    type: '0x0',
+    rawLogs: [ [Object] ]
+  },
+  logs: []
+}
+```
+
+Again querying the NFT owner will show the NFT is owned by the new address:
+```sh
+$ cd opensea-nft-dev;
+$ truffle console --network openeth
+$ truffle(openeth) const nft = await SimpleNFT.deployed()
+$ truffle(openeth) nft.ownerOf(1)
+...
+# should now change to the buyer's address as well!
+'0x09dD1D0088B6934F04505cEe81b6E80e82d2c888'
 ```
 
 ### Run Subgraph Indexer

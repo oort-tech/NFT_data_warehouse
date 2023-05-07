@@ -53,7 +53,7 @@ module.exports = {
 
 /*
 const exchange = await WyvernExchange.deployed();
-const { buildOrder, executeOrder } = require("./orders/SimpleNft_2.js")
+const { buildOrder, executeOrder } = require("./orders/SimpleNft_1.js")
 
 var order = buildOrder(exchange, "$NFT_ADDR", "$TOKEN_ID")
 executeOrder(exchange, order)
