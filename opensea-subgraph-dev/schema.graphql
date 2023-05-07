@@ -61,13 +61,13 @@ type Asset @entity {
     " { collection contract address } - { token id } "
     id: ID!
     
-    " id of the token in the collection "
+    " Id of the token in the collection "
     tokenId: BigInt!
 
-    " token URL for this asset "
-    tokenURI: String!
+    " Token URL for this asset. Leave as null if unfound."
+    tokenURI: String
 
-    "collection of where this id belongs to"
+    " Collection of where this id belongs to"
     collection: Collection!
 
 }
