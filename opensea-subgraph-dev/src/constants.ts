@@ -6,12 +6,9 @@ export namespace NftStandard {
   export const UNKNOWN = "UNKNOWN";
 }
 
-export namespace SaleStrategy {
-  export const STANDARD_SALE = "STANDARD_SALE";
-  export const ANY_ITEM_FROM_COLLECTION = "ANY_ITEM_FROM_COLLECTION";
-  export const ANY_ITEM_FROM_SET = "ANY_ITEM_FROM_SET";
-  export const DUTCH_AUCTION = "DUTCH_AUCTION";
-  export const PRIVATE_SALE = "PRIVATE_SALE";
+export namespace SaleKind {
+  export const DIRECT_PURCHASE = "DIRECT_PURCHASE";
+  export const AUCTION = "AUCTION";
 }
 
 export namespace Side {
@@ -22,10 +19,15 @@ export namespace Side {
 // Represents native ETH when used in the paymentToken field
 export const NULL_ADDRESS = Address.zero();
 
+// The contract address that WyvernExchange invokes when there's a bundle sale.
+// This address atomically executes all token transfers in an atomic way.
+// https://etherscan.io/address/0xC99f70bFD82fb7c8f8191fdfbFB735606b15e5c5
 export const WYVERN_ATOMICIZER_ADDRESS = Address.fromString(
   "0xc99f70bfd82fb7c8f8191fdfbfb735606b15e5c5"
 );
 
+// OpenSea charges a 2.5% fee as protocol fee, which is 250 basis points.
+// https://support.opensea.io/hc/en-us/articles/14068991090067-What-are-OpenSea-s-fees-#:~:text=OpenSea%20fees,the%202.5%25%20fee%20will%20apply.
 export const EXCHANGE_MARKETPLACE_FEE = BigInt.fromI32(250);
 
 // Function Selectors for ERC721/1155 Transfer Methods
@@ -48,10 +50,14 @@ export const ETHABI_DECODE_PREFIX = Bytes.fromHexString(
   "0000000000000000000000000000000000000000000000000000000000000020"
 );
 
+// https://eips.ethereum.org/EIPS/eip-721
 export const ERC721_INTERFACE_IDENTIFIER = "0x80ac58cd";
+// https://eips.ethereum.org/EIPS/eip-1155#specification
 export const ERC1155_INTERFACE_IDENTIFIER = "0xd9b67a26";
 
-export const MANTISSA_FACTOR = BigInt.fromI32(10).pow(18).toBigDecimal();
+export const NUM_WEI_IN_ETH = BigInt.fromI32(10).pow(18).toBigDecimal();
+// Defined in OpenSea WyvernExchange protocol: 
+// https://github.com/ProjectWyvern/wyvern-ethereum/blob/master/contracts/exchange/ExchangeCore.sol#L79
 export const INVERSE_BASIS_POINT = BigDecimal.fromString("10000");
 
 export const BIGINT_ZERO = BigInt.zero();
@@ -59,5 +65,3 @@ export const BIGINT_ONE = BigInt.fromI32(1);
 export const BIGDECIMAL_ZERO = BigDecimal.zero();
 export const BIGDECIMAL_HUNDRED = BigInt.fromI32(100).toBigDecimal();
 export const BIGDECIMAL_MAX = BigInt.fromI32(i32.MAX_VALUE).toBigDecimal();
-
-export const SECONDS_PER_DAY = 24 * 60 * 60;

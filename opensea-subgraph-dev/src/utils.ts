@@ -7,36 +7,44 @@ import {
 } from "@graphprotocol/graph-ts";
 import { AtomicMatch_Call } from "../generated/OpenSea/OpenSea";
 import {
+  BIGDECIMAL_ZERO,
   BIGINT_ONE,
   BIGINT_ZERO,
+  ERC1155_INTERFACE_IDENTIFIER,
   ERC1155_SAFE_TRANSFER_FROM_SELECTOR,
+  ERC721_INTERFACE_IDENTIFIER,
   ERC721_SAFE_TRANSFER_FROM_SELECTOR,
   ETHABI_DECODE_PREFIX,
   MATCH_ERC1155_SAFE_TRANSFER_FROM_SELECTOR,
   MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR,
   MATCH_ERC721_TRANSFER_FROM_SELECTOR,
   NULL_ADDRESS,
-  SaleStrategy,
+  NUM_WEI_IN_ETH,
+  NftStandard,
+  SaleKind,
   Side,
   TRANSFER_FROM_SELECTOR,
 } from "./constants";
+import { ERC165 } from "../generated/OpenSea/ERC165";
+import { NftMetadata } from "../generated/OpenSea/NftMetadata";
+import { Asset, Collection } from "../generated/schema";
 
 export class DecodedTransferResult {
   constructor(
-    public readonly method: string,
+    public readonly functionSelector: string,
     public readonly from: Address,
     public readonly to: Address,
     public readonly token: Address,
     public readonly tokenId: BigInt,
     public readonly amount: BigInt
-  ) {}
+  ) { }
 }
 
 export class DecodedAtomicizeResult {
   constructor(
     public readonly targets: Address[],
     public readonly callDatas: Bytes[]
-  ) {}
+  ) { }
 }
 
 /**
@@ -60,15 +68,14 @@ export function getOrderSide(side: i32): string {
 }
 
 /**
- * Get sale strategy from saleKind parameter
- * enum SaleKind { FixedPrice, DutchAuction }
+ * Get salekind, either DIRECT_PURCHASE or AUCTION
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/exchange/SaleKindInterface.sol#L29
  */
-export function getSaleStrategy(saleKind: i32): string {
+export function getSaleKind(saleKind: i32): string {
   if (saleKind == 0) {
-    return SaleStrategy.STANDARD_SALE;
+    return SaleKind.DIRECT_PURCHASE;
   } else {
-    return SaleStrategy.DUTCH_AUCTION;
+    return SaleKind.AUCTION;
   }
 }
 
@@ -174,9 +181,9 @@ export function calculateFinalPrice(
   expirationTime: BigInt,
   now: BigInt
 ): BigInt {
-  if (getSaleStrategy(saleKind) == SaleStrategy.STANDARD_SALE) {
+  if (getSaleKind(saleKind) == SaleKind.DIRECT_PURCHASE) {
     return basePrice;
-  } else if (getSaleStrategy(saleKind) == SaleStrategy.DUTCH_AUCTION) {
+  } else if (getSaleKind(saleKind) == SaleKind.AUCTION) {
     const diff = extra
       .times(now.minus(listingTime))
       .div(expirationTime.minus(listingTime));
@@ -231,7 +238,7 @@ export function guardedArrayReplace(
  * https://www.4byte.directory/signatures/?bytes4_signature=0x23b872dd
  * https://www.4byte.directory/signatures/?bytes4_signature=0x42842e0e
  */
-export function decode_ERC721Transfer_Method(
+export function decodeERC721TransferMethod(
   target: Address,
   callData: Bytes
 ): DecodedTransferResult {
@@ -263,7 +270,7 @@ export function decode_ERC721Transfer_Method(
  * https://www.4byte.directory/signatures/?bytes4_signature=0xf242432a
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes)
  */
-export function decode_ERC1155Transfer_Method(
+export function decodeERC1155TransferMethod(
   target: Address,
   callData: Bytes
 ): DecodedTransferResult {
@@ -304,7 +311,7 @@ export function decode_ERC1155Transfer_Method(
  * https://www.4byte.directory/signatures/?bytes4_signature=0xc5a0236e
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes/bytes array)
  */
-export function decode_matchERC721UsingCriteria_Method(
+export function decodeMatchERC721UsingCriteria_Method(
   callData: Bytes
 ): DecodedTransferResult {
   const functionSelector = getFunctionSelector(callData);
@@ -342,9 +349,7 @@ export function decode_matchERC721UsingCriteria_Method(
  * https://www.4byte.directory/signatures/?bytes4_signature=0x96809f90
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes/bytes array)
  */
-export function decode_matchERC1155UsingCriteria_Method(
-  callData: Bytes
-): DecodedTransferResult {
+export function decodeMatchERC1155UsingCriteriaMethod(callData: Bytes): DecodedTransferResult {
   const functionSelector = getFunctionSelector(callData);
   const dataWithoutFunctionSelector = Bytes.fromUint8Array(
     callData.subarray(4)
@@ -381,9 +386,7 @@ export function decode_matchERC1155UsingCriteria_Method(
  * https://www.4byte.directory/signatures/?bytes4_signature=0x68f0bcaa
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes/arrays)
  */
-export function decode_atomicize_Method(
-  callData: Bytes
-): DecodedAtomicizeResult {
+export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicizeResult {
   const dataWithoutFunctionSelector = Bytes.fromUint8Array(
     callData.subarray(4)
   );
@@ -405,32 +408,150 @@ export function decode_atomicize_Method(
   return new DecodedAtomicizeResult(targets, atomicizedCallDatas);
 }
 
-export function decode_nftTransfer_Method(
-  target: Address,
-  callData: Bytes
-): DecodedTransferResult {
+export function decodeNftTransferMethod(target: Address,callData: Bytes): DecodedTransferResult {
   const functionSelector = getFunctionSelector(callData);
   if (
     functionSelector == TRANSFER_FROM_SELECTOR ||
     functionSelector == ERC721_SAFE_TRANSFER_FROM_SELECTOR
   ) {
-    return decode_ERC721Transfer_Method(target, callData);
+    return decodeERC721TransferMethod(target, callData);
   } else if (
     functionSelector == MATCH_ERC721_TRANSFER_FROM_SELECTOR ||
     functionSelector == MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR
   ) {
-    return decode_matchERC721UsingCriteria_Method(callData);
+    return decodeMatchERC721UsingCriteria_Method(callData);
   } else if (functionSelector == ERC1155_SAFE_TRANSFER_FROM_SELECTOR) {
-    return decode_ERC1155Transfer_Method(target, callData);
+    return decodeERC1155TransferMethod(target, callData);
   } else {
-    return decode_matchERC1155UsingCriteria_Method(callData);
+    return decodeMatchERC1155UsingCriteriaMethod(callData);
   }
 }
 
-export function min(a: BigDecimal, b: BigDecimal): BigDecimal {
-  return a.lt(b) ? a : b;
+export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAddr: string): Asset {
+  let asset = Asset.load(assetID);
+  if (!asset) {
+    asset = new Asset(assetID)
+    const contract = NftMetadata.bind(Address.fromString(collectionAddr));
+    const nftStandard = getNftStandard(collectionAddr);
+    if (nftStandard == NftStandard.ERC721) {
+      // ERC721 standard [[tokenURI]] interfacec to find the URI of the NFT asset.
+      // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol#L93
+      const erc721TokenURIResult = contract.try_tokenURI(tokenId);
+      if (!erc721TokenURIResult.reverted) {
+        asset.tokenURI = erc721TokenURIResult.value;
+      }
+    } else if (nftStandard == NftStandard.ERC1155) {
+      // ERC1155 standard [[uri]] interface to find the URI of the NFT asset.
+      // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC1155/ERC1155.sol#L59
+      const erc1155TokenURIResult = contract.try_uri(tokenId);
+      if (!erc1155TokenURIResult.reverted) {
+        asset.tokenURI = erc1155TokenURIResult.value;
+      }
+      asset.tokenId = tokenId;
+      asset.collection = collectionAddr;
+      asset.save();
+    }
+  }
+  return asset;
 }
 
-export function max(a: BigDecimal, b: BigDecimal): BigDecimal {
-  return a.lt(b) ? b : a;
+export function getOrCreateCollection(collectionID: string): Collection {
+  let collection = Collection.load(collectionID);
+  if (!collection) {
+    collection = new Collection(collectionID);
+
+    collection.nftStandard = getNftStandard(collectionID);
+    const contract = NftMetadata.bind(Address.fromString(collectionID));
+
+    const nameResult = contract.try_name();
+    if (!nameResult.reverted) {
+      collection.name = nameResult.value;
+    }
+    const symbolResult = contract.try_symbol();
+    if (!symbolResult.reverted) {
+      collection.symbol = symbolResult.value;
+    }
+    const totalSupplyResult = contract.try_totalSupply();
+    if (!totalSupplyResult.reverted) {
+      collection.totalSupply = totalSupplyResult.value;
+    }
+
+    collection.royaltyFee = BIGDECIMAL_ZERO;
+    collection.cumulativeTradeVolumeETH = BIGDECIMAL_ZERO;
+    collection.marketplaceRevenueETH = BIGDECIMAL_ZERO;
+    collection.creatorRevenueETH = BIGDECIMAL_ZERO;
+    collection.totalRevenueETH = BIGDECIMAL_ZERO;
+    collection.tradeCount = 0;
+    collection.buyerCount = 0;
+    collection.sellerCount = 0;
+
+    collection.save();
+  }
+
+  return collection;
+}
+
+function getNftStandard(collectionID: string): string {
+  const erc165 = ERC165.bind(Address.fromString(collectionID));
+
+  const isERC721Result = erc165.try_supportsInterface(
+    Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER)
+  );
+  if (!isERC721Result.reverted && isERC721Result.value) {
+    return NftStandard.ERC721;
+  }
+
+  const isERC1155Result = erc165.try_supportsInterface(
+    Bytes.fromHexString(ERC1155_INTERFACE_IDENTIFIER)
+  );
+  if (!isERC1155Result.reverted && isERC1155Result.value) {
+    return NftStandard.ERC1155;
+  }
+
+  return NftStandard.UNKNOWN;
+}
+
+/**
+ * Calculates trade/order price in BigDecimal.
+ */
+export function calculateTradePriceETH(
+  call: AtomicMatch_Call,
+  paymentToken: Address
+): BigDecimal {
+  if (paymentToken == NULL_ADDRESS) {
+    // Prices returns in Wei units
+    const price = calculateMatchPrice(call);
+    return price.toBigDecimal().div(NUM_WEI_IN_ETH);
+  } else {
+    return BIGDECIMAL_ZERO;
+  }
+}
+
+export function decodeSingleTransferResult(
+  call: AtomicMatch_Call,
+  callData: Bytes
+): DecodedTransferResult | null {
+  const sellTarget = call.inputs.addrs[11];
+  if (!validateCallDataFunctionSelector(callData)) {
+    return null;
+  } else {
+    return decodeNftTransferMethod(sellTarget, callData);
+  }
+}
+
+export function decodeBundleNftTransferResults(callDatas: Bytes): DecodedTransferResult[] {
+  const decodedTransferResults: DecodedTransferResult[] = [];
+  const decodedAtomicizeResult = decodeAtomicizeCall(callDatas);
+  for (let i = 0; i < decodedAtomicizeResult.targets.length; i++) {
+    const target = decodedAtomicizeResult.targets[i];
+    const calldata = decodedAtomicizeResult.callDatas[i];
+    if (validateCallDataFunctionSelector(calldata)) {
+      const singleNftTransferResult = decodeNftTransferMethod(
+        target,
+        calldata
+      );
+      decodedTransferResults.push(singleNftTransferResult);
+    }
+  }
+  return decodedTransferResults;
 }
