@@ -1,29 +1,5 @@
 import { Address, BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-export namespace Network {
-  export const ARBITRUM_ONE = "ARBITRUM_ONE";
-  export const ARWEAVE_MAINNET = "ARWEAVE_MAINNET";
-  export const AURORA = "AURORA";
-  export const AVALANCHE = "AVALANCHE";
-  export const BOBA = "BOBA";
-  export const BSC = "BSC"; // aka BNB Chain
-  export const CELO = "CELO";
-  export const COSMOS = "COSMOS";
-  export const MAINNET = "MAINNET"; // Ethereum mainnet
-  export const FANTOM = "FANTOM";
-  export const FUSE = "FUSE";
-  export const HARMONY = "HARMONY";
-  export const JUNO = "JUNO";
-  export const MOONBEAM = "MOONBEAM";
-  export const MOONRIVER = "MOONRIVER";
-  export const NEAR_MAINNET = "NEAR_MAINNET";
-  export const OPTIMISM = "OPTIMISM";
-  export const OSMOSIS = "OSMOSIS";
-  export const MATIC = "MATIC"; // aka Polygon
-  export const XDAI = "XDAI"; // aka Gnosis Chain
-  export const CRONOS = "CRONOS"; // Crypto.com Cronos chain
-}
-
 export namespace NftStandard {
   export const ERC721 = "ERC721";
   export const ERC1155 = "ERC1155";
@@ -45,9 +21,6 @@ export namespace Side {
 
 // Represents native ETH when used in the paymentToken field
 export const NULL_ADDRESS = Address.zero();
-export const WETH_ADDRESS = Address.fromString(
-  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-);
 
 export const WYVERN_ATOMICIZER_ADDRESS = Address.fromString(
   "0xc99f70bfd82fb7c8f8191fdfbfb735606b15e5c5"

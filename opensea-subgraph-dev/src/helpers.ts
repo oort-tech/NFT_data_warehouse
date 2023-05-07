@@ -8,20 +8,13 @@ import {
 import { ERC165 } from "../generated/OpenSea/ERC165";
 import { NftMetadata } from "../generated/OpenSea/NftMetadata";
 import { AtomicMatch_Call } from "../generated/OpenSea/OpenSea";
-import {
-  Collection,
-  CollectionDailySnapshot,
-  Marketplace,
-  MarketplaceDailySnapshot,
-} from "../generated/schema";
-import { NetworkConfigs } from "../configurations/configure";
+import { Asset, Collection } from "../generated/schema";
 import {
   NftStandard,
   BIGDECIMAL_ZERO,
   BIGDECIMAL_MAX,
   BIGINT_ZERO,
   NULL_ADDRESS,
-  WETH_ADDRESS,
   MANTISSA_FACTOR,
   SECONDS_PER_DAY,
   ERC721_INTERFACE_IDENTIFIER,
@@ -35,31 +28,23 @@ import {
   getFunctionSelector,
   validateCallDataFunctionSelector,
 } from "./utils";
-import { Versions } from "./versions";
 
-export function getOrCreateMarketplace(marketplaceID: string): Marketplace {
-  let marketplace = Marketplace.load(marketplaceID);
-  if (!marketplace) {
-    marketplace = new Marketplace(marketplaceID);
-    marketplace.name = NetworkConfigs.getProtocolName();
-    marketplace.slug = NetworkConfigs.getProtocolSlug();
-    marketplace.network = NetworkConfigs.getNetwork();
-    marketplace.collectionCount = 0;
-    marketplace.tradeCount = 0;
-    marketplace.cumulativeTradeVolumeETH = BIGDECIMAL_ZERO;
-    marketplace.marketplaceRevenueETH = BIGDECIMAL_ZERO;
-    marketplace.creatorRevenueETH = BIGDECIMAL_ZERO;
-    marketplace.totalRevenueETH = BIGDECIMAL_ZERO;
-    marketplace.cumulativeUniqueTraders = 0;
+export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAddr: string): Asset {
+  let asset = Asset.load(assetID);
+  if (!asset) {
+    asset = new Asset(assetID)
+    const contract = NftMetadata.bind(Address.fromString(collectionAddr));
+    const tokenURIResult = contract.try_tokenURI(tokenId);
+    if (!tokenURIResult.reverted) {
+      asset.tokenURI = tokenURIResult.value;
+    } else {
+      asset.tokenURI = "NOT FOUND"
+    }
+    asset.tokenId = tokenId;
+    asset.collection = collectionAddr;
+    asset.save();
   }
-
-  marketplace.schemaVersion = Versions.getSchemaVersion();
-  marketplace.subgraphVersion = Versions.getSubgraphVersion();
-  marketplace.methodologyVersion = Versions.getMethodologyVersion();
-
-  marketplace.save();
-
-  return marketplace;
+  return asset;
 }
 
 export function getOrCreateCollection(collectionID: string): Collection {
@@ -93,74 +78,9 @@ export function getOrCreateCollection(collectionID: string): Collection {
     collection.sellerCount = 0;
 
     collection.save();
-
-    const marketplace = getOrCreateMarketplace(
-      NetworkConfigs.getMarketplaceAddress()
-    );
-    marketplace.collectionCount += 1;
-    marketplace.save();
   }
 
   return collection;
-}
-
-export function getOrCreateMarketplaceDailySnapshot(
-  timestamp: BigInt
-): MarketplaceDailySnapshot {
-  const snapshotID = (timestamp.toI32() / SECONDS_PER_DAY).toString();
-
-  let snapshot = MarketplaceDailySnapshot.load(snapshotID);
-  if (!snapshot) {
-    snapshot = new MarketplaceDailySnapshot(snapshotID);
-    snapshot.marketplace = NetworkConfigs.getMarketplaceAddress();
-    snapshot.blockNumber = BIGINT_ZERO;
-    snapshot.timestamp = BIGINT_ZERO;
-    snapshot.collectionCount = 0;
-    snapshot.cumulativeTradeVolumeETH = BIGDECIMAL_ZERO;
-    snapshot.marketplaceRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.creatorRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.totalRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.tradeCount = 0;
-    snapshot.cumulativeUniqueTraders = 0;
-    snapshot.dailyTradedItemCount = 0;
-    snapshot.dailyActiveTraders = 0;
-    snapshot.dailyTradedCollectionCount = 0;
-
-    snapshot.save();
-  }
-
-  return snapshot;
-}
-
-export function getOrCreateCollectionDailySnapshot(
-  collection: string,
-  timestamp: BigInt
-): CollectionDailySnapshot {
-  const snapshotID = collection
-    .concat("-")
-    .concat((timestamp.toI32() / SECONDS_PER_DAY).toString());
-
-  let snapshot = CollectionDailySnapshot.load(snapshotID);
-  if (!snapshot) {
-    snapshot = new CollectionDailySnapshot(snapshotID);
-    snapshot.collection = collection;
-    snapshot.blockNumber = BIGINT_ZERO;
-    snapshot.timestamp = BIGINT_ZERO;
-    snapshot.royaltyFee = BIGDECIMAL_ZERO;
-    snapshot.dailyMinSalePrice = BIGDECIMAL_MAX;
-    snapshot.dailyMaxSalePrice = BIGDECIMAL_ZERO;
-    snapshot.cumulativeTradeVolumeETH = BIGDECIMAL_ZERO;
-    snapshot.dailyTradeVolumeETH = BIGDECIMAL_ZERO;
-    snapshot.marketplaceRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.creatorRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.totalRevenueETH = BIGDECIMAL_ZERO;
-    snapshot.tradeCount = 0;
-    snapshot.dailyTradedItemCount = 0;
-
-    snapshot.save();
-  }
-
-  return snapshot;
 }
 
 function getNftStandard(collectionID: string): string {
@@ -203,7 +123,7 @@ export function calcTradePriceETH(
   call: AtomicMatch_Call,
   paymentToken: Address
 ): BigDecimal {
-  if (paymentToken == NULL_ADDRESS || paymentToken == WETH_ADDRESS) {
+  if (paymentToken == NULL_ADDRESS) {
     const price = calculateMatchPrice(call);
     return price.toBigDecimal().div(MANTISSA_FACTOR);
   } else {

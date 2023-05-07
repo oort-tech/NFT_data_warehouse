@@ -61,6 +61,7 @@ module.exports = {
             order.staticExtradataSell,
             order.vs,
             order.rssMetadata, {
+                isSellSideOrder: true, // direct purchase
                 value: price, // ETH to send as `msg.value`,
             }
         )
