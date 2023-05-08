@@ -68,6 +68,9 @@ type Asset @entity {
 
   " Current owner (depending on indexing progress) of this NFT asset. "
   owner: User!
+
+  " All trades that have been involving this asset. "
+  trades: [Trade!]! @derivedFrom(field: "asset")
 }
 
 type User @entity {

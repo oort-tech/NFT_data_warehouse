@@ -607,4 +607,4 @@ and we get:
 And see how a user's sales and purchase histories are automatically populated!
 
 ## Production Subgraph Deployment
-We have deployed the latest version on Subgraph Studio, available for querying [here](https://api.studio.thegraph.com/proxy/45684/opensea-subgraph-dcab1/v0.0.10/graphql).
+We have deployed the latest version on Subgraph Studio, available for querying [here](https://api.studio.thegraph.com/proxy/45684/opensea-subgraph-dcab1/v0.0.11/graphql).
