@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sell NFT</title>
+    <link rel = "stylesheet" href = "css/styles.css">
+    <script src = "script.js"></script>
+</head>
+<body>
+    <h1> Sell NFT </h1>
+
+    <form action="/submit" method = "post">
+        <div class = "CreateNFT">
+            <div class = "creatediv">
+                <label>NFT ID</label>
+                <input type="text" class = "sellnftid">
+            </div>
+            <br>
+            <div class = "creatediv">
+                <label>Selling Price</label>
+                <input type="text" class = "sellPrice"> 
+            </div>
+            <br>
+            <button class = "sellpagesell" onclick="popinvalidinputsell()" name = "sell">List for Sale</button>
+            <br>
+            <button type = "submit" class = "transferbacktohomepage" name = "goback">Go back</button>
+        </div>
+    </form>
+</body>
