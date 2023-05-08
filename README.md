@@ -1,37 +1,52 @@
-# NFTVerse Data Warehouse
+# FinalProject_NFTmarketPlace_6883 - Topic 1 NFT Marketplace
 
-## Overview:
-NFTVerse Data Warehouse is a comprehensive NFT data storage and retrieval system that combines on-chain NFT transaction history, metadata, and off-chain NFT multimedia content such as images and videos stored on the InterPlanetary File System (IPFS). The project aims to provide an easy-to-use API for developers to build novel NFT applications and analytics tools to foster innovation and growth within the NFT ecosystem.
+## Github Structure
+### Top Level
+    - .gitignore
+    - package.json
+    - hardhat.config.js
+    - README.md
+    - src                                       (This folder contains the code for frontend & backend)
+          - backend                                 (This folder contains the code for backend)
+                - contract                              (This folder contains the code for NFT_Marketplace smart contract)
+                      - NFT_Marketplace.sol                 (This file implements the NFT_Marketplace smart contract)
+                - scripts                               (This folder contains the code to deploy the smart contract onto the blockchain)
+                      - deploy.js                           (This file deploys the NFT_Marketplace smart contract onto the blockchain)
+                - test                                  (This folder contains the test bench code)
+                      - NFTMarketplace.test.js              (This file contains the test bech code)
+          - frontend                            (This folder contains the code for frontend)
+                - components                        (This folder contains the code for the frontend Web App)
+                - contractsData                     (This folder contains blockchain information passed to the frontend Wen App)
+ 
+  node,js - v16.20.0  <br>
+  METAMASK  <br>
+ 
+ 
+1. npm install
+2. npm install --save-dev hardhat@2.8.4
+3. npm install react-router-dom@6
+4. npm install ipfs-http-client@56.0.1
+5. npm i @openzeppelin/contracts@4.5.0
 
-## Components:
+Run testbench:  <br>
+ npx hardhat test  <br>
+ 
+GUI:  <br>
+ 1. npx hardhat node     (log the testing accounts @ keys)
+ 2. open a new terminal, run: npx hardhat run src\backend\scripts\deploy.js --network localhost
+ 3. open a new terminal, run: npm run start     (Should open a GUI webpage the browser)
+ 4. open METAMASK on the browser, create and connect to Hardhat Node using the following setup:  <br>
+      Network Name: Hardhat Node  <br>
+      New RPC URL: http://127.0.0.1:8545  <br>
+      Chain ID: 31337  <br>
+      Currency symbol: ETH  <br>
+      if previously connected to the Hardhat Node, disconnect the blockchain and reconnect.  <br>
+      Should also remove all the previous test accounts, after adding new test accounts, follow this instruction and make sure the
+      accounts are reset:
+      https://medium.com/@thelasthash/solved-nonce-too-high-error-with-metamask-and-hardhat-adc66f092cd  <br>
+ 5. Import the testing accounts to METAMASK using corresponding private keys
+ 6. In the GUI webpage, click "Connect Wallte", select which account to connect in the METAMASK's prompt
+ 7. Create, send, buy and sell NFT using the GUI
+ 8. To switch to another testing account, open "Connected sites" page in the METAMASK account tabe, disconnect the localhost page, refresh the webpage and connect using another account. 
 
-### Data Collection:
-The data collection module aggregates NFT transaction data and metadata from various blockchain networks (e.g., Ethereum, Binance Smart Chain, Solana) using their respective APIs. Off-chain NFT multimedia content is fetched from IPFS using the content hash provided in the metadata. Data is collected in real-time to ensure the most up-to-date information is available for developers.
-
-### Data Processing:
-Collected data is cleaned, validated, and enriched with additional details (e.g., token standard, NFT collection name) before being stored in the data warehouse. The data processing module also handles deduplication and normalization of the data across different blockchain networks to provide a unified view.
-
-### Data Storage:
-The data warehouse is built on a scalable and distributed database system optimized for handling large volumes of structured and semi-structured data. This system ensures low-latency queries and high availability for the APIs built on top of it.
-
-### API Layer:
-The API layer provides a suite of RESTful APIs for developers to access the data warehouse. It offers endpoints for querying NFT transaction history, metadata, and multimedia content, along with advanced search and filtering capabilities. The API layer also handles authentication and rate limiting to ensure fair usage and security.
-
-### Documentation and Developer Portal:
-A comprehensive documentation and developer portal is available to help developers understand the API usage, access sample code, and explore interactive API documentation. This portal also offers a community forum for developers to discuss ideas, ask questions, and share their NFT application projects.
-
-## Possible Use Cases:
-
-### NFT Analytics Platform:
-Developers can create an analytics platform that tracks the performance of various NFT collections, marketplaces, and individual tokens, providing insights into trends, sales volume, and pricing.
-
-### NFT Discovery and Recommendation Engine:
-Using the data warehouse, developers can build a recommendation engine that helps users discover new NFTs based on their preferences, browsing history, and social network.
-
-### NFT Portfolio Management:
-Developers can create an NFT portfolio management app that allows users to track their NFT holdings, analyze their investments, and make informed decisions on buying or selling NFTs.
-
-### NFT-based Gaming and Virtual Worlds:
-The API can be used to develop novel gaming experiences and virtual worlds where users can showcase, trade, or interact with their NFTs in an immersive environment.
-
-By providing a robust and comprehensive data warehouse solution for NFTs, the NFTVerse Data Warehouse project aims to fuel innovation and growth in the NFT ecosystem by offering developers a powerful toolset for creating cutting-edge NFT applications.
+![alt text](/GUI_Sample.png)
