@@ -28,19 +28,19 @@ type Collection @entity {
   " NFT Standard the collection uses. ERC721 or ERC1155. UNKNOWN if not found. "
   nftStandard: NftStandard!
 
-  " Royalty fee rate in percentage. E.g. 2.5% should be 2.5 "
+  " Royalty fee rate in percentage. E.g. 2.5% should be 2.5 (that of OpenSea). Similar to Messari. "
   royaltyFee: BigDecimal!
 
   " Cumulative trade volume (in ETH) "
   cumulativeTradeVolumeETH: BigDecimal!
 
-  " Revenue that goes to the marketplace protocol, aka protocol fee. "
+  " Revenue that goes to the marketplace protocol. Similar to Messari."
   marketplaceRevenueETH: BigDecimal!
 
-  " Revenue that goes to creator, aka royalty fee. "
+  " Revenue that goes to creator, aka royalty fee. Similar to Messari."
   creatorRevenueETH: BigDecimal!
 
-  " Sum of marketplaceRevenue and creatorRevenue. "
+  " Sum of marketplaceRevenue and creatorRevenue. Similar to Messari."
   totalRevenueETH: BigDecimal!
 
   " Trade count of the collection on the marketplace. "
@@ -57,23 +57,23 @@ type Collection @entity {
 }
 
 type Asset @entity {
-    " { collection contract address } - { token id } "
-    id: ID!
-    
-    " Id of the token in the collection "
-    tokenId: BigInt!
+  " { collection contract address } - { token id } "
+  id: ID!
+  
+  " Id of the token in the collection "
+  tokenId: BigInt!
 
-    " Token URL for this asset. Leave as null if unfound."
-    tokenURI: String
+  " Token URL for this asset. Leave as null if unfound."
+  tokenURI: String
 
-    " Trade count of the asset on the marketplace. "
-    tradeCount: Int!
+  " Trade count of the asset on the marketplace. "
+  tradeCount: Int!
 
-    " Collection of where this id belongs to"
-    collection: Collection!
+  " Collection of where this id belongs to"
+  collection: Collection!
 
-    " Current owner (depending on indexing progress) of this NFT asset. "
-    owner: User!
+  " Current owner (depending on indexing progress) of this NFT asset. "
+  owner: User!
 }
 
 type User @entity {
