@@ -46,12 +46,6 @@ type Collection @entity {
   " Trade count of the collection on the marketplace. "
   tradeCount: Int!
 
-  " Buyer count. "
-  buyerCount: Int!
-
-  " Seller count. "
-  sellerCount: Int!
-
   " Discovered assets of the collection "
   assets: [Asset!]! @derivedFrom(field: "collection")
 }
@@ -80,11 +74,11 @@ type User @entity {
   " Wallet address. "
   id: ID!
 
-  " Number of NFTs it has bought "
-  bought: Int!
+  " Trades it has bought "
+  purchases: [Trade!]! @derivedFrom(field: "buyer")
 
-  " Number of NFTs it has sold "
-  sold: Int!
+  " Trades it has sold "
+  sales: [Trade!]! @derivedFrom(field: "seller")
 
   " Discovered assets owned by this user. "
   assets: [Asset!]! @derivedFrom(field: "owner")
@@ -117,10 +111,10 @@ type Trade @entity {
   saleKind: SaleKind!
 
   " Buyer account address "
-  buyer: String!
+  buyer: User!
 
   " Seller account address "
-  seller: String!
+  seller: User!
 
   " Asset Involved. "
   asset: Asset!

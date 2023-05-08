@@ -239,14 +239,15 @@ module.exports = {
             }
         } else if (functionSelector == CONSTANTS.MATCH_ERC721_TRANSFER_FROM_SELECTOR) {
             let [from, to, token, tokenId] = args
-            let root = proof = emptyHex(32)
+            let root = emptyHex(32)
+            let proof = ("00000000000000000000000000000000000000000000000000000000000000c0" + emptyHex(32)) // simulate a bytearray with padding
             if (from.startsWith("0x")) from = from.slice(2)
             if (to.startsWith("0x")) to = to.slice(2)
             return {
                 buyCalldata: `0x${functionSelector}${emptyHex(32)}${paddedAddress(to)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`,
-                buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
+                buyReplacementPattern: `0x${emptyHex(4)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
                 sellCalldata: `0x${functionSelector}${paddedAddress(from)}${emptyHex(32)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`,
-                sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
+                sellReplacementPattern: `0x${emptyHex(4)}${emptyHex(32)}${maxHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}${emptyHex(32)}`,
                 aggregated: `0x${functionSelector}${paddedAddress(from)}${paddedAddress(to)}${paddedAddress(token)}${intToPaddedHex(tokenId)}${root}${proof}`
             }
         } else {
@@ -255,11 +256,13 @@ module.exports = {
     }
 }
 
-// 0xfb16a595
-// 0000000000000000000000000000000000000000000000000000000000000000
-// 000000000000000000000000c78c6bb23ac77b7d19817c1c67c38675af97a5a2
-// 000000000000000000000000f1005f6379f35fe681c7c458eb4f3704ead4f14a
-// 000000000000000000000000000000000000000000000000000000000000041b
-// 0000000000000000000000000000000000000000000000000000000000000000
-// 00000000000000000000000000000000000000000000000000000000000000c0
-// 0000000000000000000000000000000000000000000000000000000000000000
+/*
+0000000000000000000000000000000000000000000000000000000000000020
+000000000000000000000000c90a9b3f192fe528070fc32d1ec1155f4f70ab29
+00000000000000000000000009dd1d0088b6934f04505cee81b6e80e82d2c888
+00000000000000000000000065d26bdfe2572685dd86d7b4eb164f891faeb02a
+0000000000000000000000000000000000000000000000000000000000000001
+0000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000c0
+0000000000000000000000000000000000000000000000000000000000000000
+*/

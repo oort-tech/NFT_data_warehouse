@@ -424,8 +424,187 @@ $ truffle(openeth) nft.ownerOf(1)
 ```
 
 ### Run Subgraph Indexer
-TODO:
 
-## Smoke Testing
+#### Deployment
+Assuming OpenEthereum is running and the local Graph node server is pointing to the local OpenEthereum http server, we can run the subgraph indexer against our test network by doing the following:
+1. Go to `/opensea-subgraph-dev`.
+2. Change the `address` and `startBlock` of the `subgraph.yaml` to what you've noted down during the OpenSea smart contract deployment.
+3. Deploy using:
+   ```sh
+   $ graph create --node http://127.0.0.1:8020/ OpenSea
+   $ graph deploy --node http://127.0.0.1:8020/ --ipfs http://127.0.0.1:5001/ OpenSea
+   ```
+4. This should create a local GraphQL server at `http://127.0.0.1:8000/subgraphs/name/OpenSea/graphql`
 
-TODO: run indexer against real ethereum network for a few minutes and note the results.
+#### Validation
+
+First, lets check our assets with query:
+```
+query MyQuery {
+  assets {
+    id
+    tokenId
+    tokenURI
+    tradeCount
+  }
+}
+```
+and we get:
+```
+{
+  "data": {
+    "assets": [
+      {
+        "id": "0x65d26bdfe2572685dd86d7b4eb164f891faeb02a-0",
+        "tokenId": "0",
+        "tokenURI": null,
+        "tradeCount": 1
+      },
+      {
+        "id": "0x65d26bdfe2572685dd86d7b4eb164f891faeb02a-1",
+        "tokenId": "1",
+        "tokenURI": null,
+        "tradeCount": 1
+      }
+    ]
+  }
+}
+```
+As expected, we have 2 token IDs being traded after executing the 2 orders, each one with a tradeCount = 1. Note that we did not define a tokenURI on our NFT, so it's expected that tokenURI is null.
+
+Next, let's check our collections and their relationship with assets with query:
+```
+query MyQuery {
+  collections {
+    tradeCount
+    totalSupply
+    totalRevenueETH
+    symbol
+    royaltyFee
+    nftStandard
+    name
+    marketplaceRevenueETH
+    id
+    cumulativeTradeVolumeETH
+    creatorRevenueETH
+    assets {
+      id
+    }
+  }
+}
+```
+
+and we get:
+```
+{
+  "data": {
+    "collections": [
+      {
+        "tradeCount": 2,
+        "totalSupply": null,
+        "totalRevenueETH": "0",
+        "symbol": "SNFT",
+        "royaltyFee": "0",
+        "nftStandard": "ERC721",
+        "name": "SimpleNFT",
+        "marketplaceRevenueETH": "0",
+        "id": "0x65d26bdfe2572685dd86d7b4eb164f891faeb02a",
+        "cumulativeTradeVolumeETH": "4.18",
+        "creatorRevenueETH": "0",
+        "assets": [
+          {
+            "id": "0x65d26bdfe2572685dd86d7b4eb164f891faeb02a-0"
+          },
+          {
+            "id": "0x65d26bdfe2572685dd86d7b4eb164f891faeb02a-1"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+So the data is correct, and note that we were able to fetch the NFT standards/metadata for the collection as well, the two token IDs are also correct.
+
+Next, let's check our users and their purchases/sales (i.e Trades) with query:
+```
+query MyQuery {
+  users {
+    id
+    purchases {
+      transactionHash
+      timestamp
+      saleKind
+      priceETH
+      isBundle
+      id
+    }
+    sales {
+      id
+      isBundle
+      priceETH
+      saleKind
+      timestamp
+      transactionHash
+    }
+  }
+}
+```
+and we get:
+```
+{
+  "data": {
+    "users": [
+      {
+        "id": "0x09dd1d0088b6934f04505cee81b6e80e82d2c888",
+        "purchases": [
+          {
+            "transactionHash": "0x65b6fc28166d229ebf989fd65d47a9b50ae0de2fb992bb262a423e4f30538368",
+            "timestamp": "1683568824",
+            "saleKind": "DIRECT_PURCHASE",
+            "priceETH": "2.09",
+            "isBundle": false,
+            "id": "0x65b6fc28166d229ebf989fd65d47a9b50ae0de2fb992bb262a423e4f30538368-0x23b872dd-0"
+          },
+          {
+            "transactionHash": "0x8b6b768f28f901997abed3445c60d0be858ee1bac87e324465f53a52ab666738",
+            "timestamp": "1683568862",
+            "saleKind": "DIRECT_PURCHASE",
+            "priceETH": "2.09",
+            "isBundle": false,
+            "id": "0x8b6b768f28f901997abed3445c60d0be858ee1bac87e324465f53a52ab666738-0xfb16a595-1"
+          }
+        ],
+        "sales": []
+      },
+      {
+        "id": "0xc90a9b3f192fe528070fc32d1ec1155f4f70ab29",
+        "purchases": [],
+        "sales": [
+          {
+            "id": "0x65b6fc28166d229ebf989fd65d47a9b50ae0de2fb992bb262a423e4f30538368-0x23b872dd-0",
+            "isBundle": false,
+            "priceETH": "2.09",
+            "saleKind": "DIRECT_PURCHASE",
+            "timestamp": "1683568824",
+            "transactionHash": "0x65b6fc28166d229ebf989fd65d47a9b50ae0de2fb992bb262a423e4f30538368"
+          },
+          {
+            "id": "0x8b6b768f28f901997abed3445c60d0be858ee1bac87e324465f53a52ab666738-0xfb16a595-1",
+            "isBundle": false,
+            "priceETH": "2.09",
+            "saleKind": "DIRECT_PURCHASE",
+            "timestamp": "1683568862",
+            "transactionHash": "0x8b6b768f28f901997abed3445c60d0be858ee1bac87e324465f53a52ab666738"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+And see how a user's sales and purchase histories are automatically populated!
+
+## Production Subgraph Deployment
+We have deployed the latest version on Subgraph Studio, available for querying [here](https://api.studio.thegraph.com/proxy/45684/opensea-subgraph-dcab1/v0.0.9/graphql).

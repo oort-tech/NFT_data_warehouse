@@ -28,6 +28,8 @@ import {
 import { ERC165 } from "../generated/OpenSea/ERC165";
 import { NftMetadata } from "../generated/OpenSea/NftMetadata";
 import { Asset, Collection, User } from "../generated/schema";
+import { log } from '@graphprotocol/graph-ts'
+
 export class DecodedTransferResult {
   constructor(
     public readonly functionSelector: string,
@@ -310,6 +312,7 @@ export function decodeERC1155TransferResult(
  * https://www.4byte.directory/signatures/?bytes4_signature=0xfb16a595
  * https://www.4byte.directory/signatures/?bytes4_signature=0xc5a0236e
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes/bytes array)
+ * Ref: https://medium.com/@r2d2_68242/indexing-transaction-input-data-in-a-subgraph-6ff5c55abf20
  */
 export function decodeMatchERC721UsingCriteriaResult(
   callData: Bytes
@@ -322,12 +325,13 @@ export function decodeMatchERC721UsingCriteriaResult(
     dataWithoutFunctionSelector
   );
 
-  const decoded = ethereum
+  const rawDecoded = ethereum
     .decode(
       "(address,address,address,uint256,bytes32,bytes32[])",
       dataWithoutFunctionSelectorWithPrefix
-    )!
-    .toTuple();
+    )
+
+  const decoded = rawDecoded!.toTuple();
   const senderAddress = decoded[0].toAddress();
   const recieverAddress = decoded[1].toAddress();
   const nftContractAddress = decoded[2].toAddress();
@@ -434,8 +438,6 @@ export function getOrCreateUser(addr: string): User {
   let user = User.load(addr);
   if (!user) {
     user = new User(addr);
-    user.bought = 0;
-    user.sold = 0;
     user.save();
   }
   return user;
@@ -498,8 +500,6 @@ export function getOrCreateCollection(collectionID: string): Collection {
     collection.creatorRevenueETH = BIGDECIMAL_ZERO;
     collection.totalRevenueETH = BIGDECIMAL_ZERO;
     collection.tradeCount = 0;
-    collection.buyerCount = 0;
-    collection.sellerCount = 0;
 
     collection.save();
   }

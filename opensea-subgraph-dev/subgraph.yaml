@@ -8,9 +8,11 @@ dataSources:
     source:
       # Replace with the OpenSea smart contract's address
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
+      # address: "0x46bB3Ba2BAB21BAf45CA181f1521D379Ed1B8b54"
       abi: OpenSea
       # Replace with the OpenSea smart contract's start block
       startBlock: 5774644
+      # startBlock: 9
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

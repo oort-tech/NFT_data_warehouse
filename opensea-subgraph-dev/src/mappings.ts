@@ -45,8 +45,8 @@ function handleSingleOrder(call: AtomicMatch_Call): void {
   let paymentToken = call.inputs.addrs[13];
   let priceETH = calculateTradePriceETH(call, paymentToken);
 
-  let sellerModel = getOrCreateUser(seller);
-  let buyerModel = getOrCreateUser(buyer);
+  getOrCreateUser(seller);
+  getOrCreateUser(buyer);
   let assetID = collectionAddr.concat("-").concat(tokenId.toString());
   let asset = getOrCreateAsset(assetID, tokenId, collectionAddr, buyer);
 
@@ -66,10 +66,6 @@ function handleSingleOrder(call: AtomicMatch_Call): void {
   trade.seller = seller;
   trade.save();
 
-  sellerModel.sold ++;
-  sellerModel.save();
-  buyerModel.bought ++;
-  buyerModel.save();
   asset.tradeCount ++;
   asset.save()
 
@@ -107,8 +103,8 @@ function handleBundleOrder(call: AtomicMatch_Call): void {
     let saleKind = getSaleKind(call.inputs.feeMethodsSidesKindsHowToCalls[6]);
     let avgTradePriceETH = bundlePriceETH.div(numItems);
 
-    let sellerModel = getOrCreateUser(seller);
-    let buyerModel = getOrCreateUser(buyer);
+    getOrCreateUser(seller);
+    getOrCreateUser(buyer);
     let assetID = collectionAddr.concat("-").concat(tokenId.toString());
     let asset = getOrCreateAsset(assetID, tokenId, collectionAddr, buyer);
 
@@ -128,10 +124,6 @@ function handleBundleOrder(call: AtomicMatch_Call): void {
     trade.seller = seller;
     trade.save();
 
-    sellerModel.sold++;
-    sellerModel.save();
-    buyerModel.bought++;
-    buyerModel.save();
     asset.tradeCount++;
     asset.save();
 
