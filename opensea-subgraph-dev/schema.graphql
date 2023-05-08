@@ -16,16 +16,16 @@ type Collection @entity {
   " Contract address. "
   id: ID!
 
-  " Collection name, mirrored from the smart contract. Leave null if not available. "
+  " Collection name. Leave null if not available. "
   name: String
 
-  " Collection symbol, mirrored from the smart contract. Leave null if not available. "
+  " Collection symbol. Leave null if not available. "
   symbol: String
 
-  " Total supply of the collection, mirrored from the smart contract. "
+  " Total supply of the collection. "
   totalSupply: BigInt
 
-  " NFT Standard the collection uses. ERC721 or ERC1155. "
+  " NFT Standard the collection uses. ERC721 or ERC1155. UNKNOWN if not found. "
   nftStandard: NftStandard!
 
   " Royalty fee rate in percentage. E.g. 2.5% should be 2.5 "
@@ -57,7 +57,6 @@ type Collection @entity {
 }
 
 type Asset @entity {
-
     " { collection contract address } - { token id } "
     id: ID!
     
@@ -67,21 +66,37 @@ type Asset @entity {
     " Token URL for this asset. Leave as null if unfound."
     tokenURI: String
 
+    " Trade count of the asset on the marketplace. "
+    tradeCount: Int!
+
     " Collection of where this id belongs to"
     collection: Collection!
 
+    " Current owner (depending on indexing progress) of this NFT asset. "
+    owner: User!
 }
 
-" Trades exist such as a combination of taker/order and bid/ask. "
+type User @entity {
+  " Wallet address. "
+  id: ID!
+
+  " Number of NFTs it has bought "
+  bought: Int!
+
+  " Number of NFTs it has sold "
+  sold: Int!
+
+  " Discovered assets owned by this user. "
+  assets: [Asset!]! @derivedFrom(field: "owner")
+}
+
+" Trades is a completed order. When `atomicMatch_()` succeeds, the order is finalized."
 type Trade @entity {
   " { Transaction hash }-{ Log index }-{ (optional) ID within bundle } "
   id: ID!
 
   " Event transaction hash. "
   transactionHash: String!
-
-  " Event log index. "
-  logIndex: Int
 
   " Block timestamp where the trade is executed. "
   timestamp: BigInt!

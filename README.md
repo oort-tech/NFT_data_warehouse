@@ -293,7 +293,7 @@ $ truffle console --network openeth
 $ truffle(openeth) const exchange = await WyvernExchange.deployed()
 $ truffle(openeth) const merkle = await MerkleValidator.deployed()
 # execute the order
-$ truffle(openeth) const { buildOrder, executeOrder } = require("./orders/SimpleNft_2.js") # or SimpleNft_3.js
+$ truffle(openeth) const { buildOrder, executeOrder } = require("./orders/SimpleNft_2.js")
 $ truffle(openeth) var order = buildOrder(exchange, merkle, "$NFT_ADDR", "$TOKEN_ID")
 $ truffle(openeth) executeOrder(exchange, order)
 ```
