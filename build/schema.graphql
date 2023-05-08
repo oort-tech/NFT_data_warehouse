@@ -1,0 +1,153 @@
+type OrderApprovedPartOne @entity(immutable: true) {
+  id: Bytes!
+  hash: Bytes! # bytes32
+  exchange: Bytes! # address
+  maker: Bytes! # address
+  taker: Bytes! # address
+  makerRelayerFee: BigInt! # uint256
+  takerRelayerFee: BigInt! # uint256
+  makerProtocolFee: BigInt! # uint256
+  takerProtocolFee: BigInt! # uint256
+  feeRecipient: Bytes! # address
+  feeMethod: Int! # uint8
+  side: Int! # uint8
+  saleKind: Int! # uint8
+  target: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OrderApprovedPartTwo @entity(immutable: true) {
+  id: Bytes!
+  hash: Bytes! # bytes32
+  howToCall: Int! # uint8
+  calldata: Bytes! # bytes
+  replacementPattern: Bytes! # bytes
+  staticTarget: Bytes! # address
+  staticExtradata: Bytes! # bytes
+  paymentToken: Bytes! # address
+  basePrice: BigInt! # uint256
+  extra: BigInt! # uint256
+  listingTime: BigInt! # uint256
+  expirationTime: BigInt! # uint256
+  salt: BigInt! # uint256
+  orderbookInclusionDesired: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OrderCancelled @entity(immutable: true) {
+  id: Bytes!
+  hash: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OrdersMatched @entity(immutable: true) {
+  id: Bytes!
+  buyHash: Bytes! # bytes32
+  sellHash: Bytes! # bytes32
+  maker: Bytes! # address
+  taker: Bytes! # address
+  price: BigInt! # uint256
+  metadata: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipRenounced @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type User @entity {
+  id: ID!
+  salesNum: BigInt!
+  purchasesNum: BigInt!
+  spent: BigDecimal!
+  earned: BigDecimal!
+  nftOwneds: [NFT!]! @derivedFrom(field: "owner")
+  collectionOwneds: [Collection!]! @derivedFrom(field: "owner")
+  sales: [Sale!]! @derivedFrom(field: "buyer")
+}
+
+type Collection @entity {
+  id: ID!
+  nft: NFT
+
+  totalSupply: BigInt
+  salesNum: BigInt!
+  salesMoney: BigDecimal!
+
+  owner: User!
+
+  event: [Event!]! @derivedFrom(field: "collection")
+  sales: [Sale!]! @derivedFrom(field: "collection")
+}
+
+type NFT @entity {
+  id: ID! #Collection + Token ID
+  collection: Collection
+  symbol: String
+  sale: Sale
+
+  salesNum: BigInt!
+  salesMoney: BigInt
+
+  tokenID: BigInt
+  owner: User!
+  events: [Event!]! @derivedFrom(field: "nft")
+}
+
+type Sale implements Event @entity {
+  id: ID!
+  sellHash: Bytes!
+  buyHash: Bytes!
+  buyer: User!
+  seller: User!
+  price: BigDecimal!
+  collection: Collection
+
+  nft: NFT
+
+  eventType: EventType!
+  logNumber: BigInt!
+  txHash: Bytes!
+  blockHash: Bytes!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+interface Event {
+  id: ID!
+  collection: Collection
+  nft: NFT
+  eventType: EventType!
+  txHash: Bytes!
+  blockHash: Bytes!
+  timestamp: BigInt!
+  logNumber: BigInt!
+  blockNumber: BigInt!
+}
+
+enum EventType {
+  SALE
+  FEE
+  AUCTION
+}

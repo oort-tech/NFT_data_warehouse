@@ -1,0 +1,8 @@
+query {
+    orderApprovedPartOnes(first: 5) {
+        id
+        hash
+        exchange
+        maker
+    }
+}
