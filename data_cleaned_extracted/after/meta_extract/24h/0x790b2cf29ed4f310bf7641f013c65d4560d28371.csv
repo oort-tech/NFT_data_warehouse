@@ -1,0 +1,26 @@
+token_id,Artifact,Category,Eastern Resource,Eastern Resource Tier,Environment,Environment Tier,Northern Resource,Northern Resource Tier,Obelisk Piece,Plot,Sediment,Sediment Tier,Southern Resource,Southern Resource Tier,Western Resource,Western Resource Tier
+0,N/A,Spirit,Whisper,3,Steppes,4,Moldium,1,Koda Origins,0,Biogenic Swamp,1,Lumileaf,3,N/A,N/A
+100,N/A,Mineral,Nether,2,Luster,2,Psychosilk,2,Koda Origins,100,Biogenic Swamp,1,Psychosilk,3,Moldium,1
+10000,N/A,Volcanic,N/A,N/A,Sulfuric,5,N/A,N/A,Koda Origins,10000,Chemical Goo,3,N/A,N/A,N/A,N/A
+10003,N/A,Volcanic,Kinsoul,3,Obsidian,3,N/A,N/A,Koda Origins,10003,Chemical Goo,3,N/A,N/A,N/A,N/A
+10007,Forged Axe,Decay,N/A,N/A,Bog,5,N/A,N/A,Koda Origins,10007,Chemical Goo,1,Lunarian,3,N/A,N/A
+10011,Relic Card,Decay,N/A,N/A,Ruins,2,N/A,N/A,Koda Origins,10011,Chemical Goo,1,Nether,1,N/A,N/A
+10013,N/A,Volcanic,N/A,N/A,Obsidian,2,Onyx,1,Koda Origins,10013,Chemical Goo,3,N/A,N/A,N/A,N/A
+10018,N/A,Psychedelic,Lumileaf,1,Sludge,3,N/A,N/A,Koda Origins,10018,Chemical Goo,3,N/A,N/A,Psychosilk,2
+10021,N/A,Volcanic,N/A,N/A,Molten,2,N/A,N/A,Koda Origins,10021,Chemical Goo,1,N/A,N/A,N/A,N/A
+10037,N/A,Mineral,Runa,1,Crystal,4,Luminite,2,Koda Origins,10037,Chemical Goo,3,Etheria,1,Luminite,3
+10039,N/A,Volcanic,Lumileaf,1,Sulfuric,4,Lumileaf,1,Koda Origins,10039,Chemical Goo,1,Whisper,1,Runa,2
+10040,N/A,Harsh,Petrified,1,Bone,2,Oblivion,2,Koda Origins,10040,Chemical Goo,1,Brimstone,2,Spikeweed,2
+10044,N/A,Mineral,Tantalite,3,Biolume,4,N/A,N/A,Koda Origins,10044,Chemical Goo,1,Whisper,1,N/A,N/A
+10046,N/A,Growth,N/A,N/A,Jungle,1,N/A,N/A,Koda Origins,10046,Chemical Goo,1,N/A,N/A,N/A,N/A
+10048,N/A,Growth,N/A,N/A,Mystic,1,Moldium,1,Koda Origins,10048,Chemical Goo,1,N/A,N/A,N/A,N/A
+10051,N/A,Harsh,Nether,2,Wastes,2,Brimstone,1,Koda Origins,10051,Chemical Goo,1,Nether,1,N/A,N/A
+10053,N/A,Growth,N/A,N/A,Jungle,5,N/A,N/A,Koda Origins,10053,Chemical Goo,1,N/A,N/A,N/A,N/A
+10055,N/A,Decay,Bonestone,2,Bog,2,N/A,N/A,Koda Origins,10055,Chemical Goo,2,Brimstone,2,N/A,N/A
+10058,N/A,Volcanic,N/A,N/A,Sulfuric,1,Whisper,2,Koda Origins,10058,Chemical Goo,1,Lunarian,1,N/A,N/A
+10060,N/A,Volcanic,Lunarian,1,Obsidian,2,N/A,N/A,Koda Origins,10060,Chemical Goo,1,N/A,N/A,Runa,2
+10062,N/A,Growth,N/A,N/A,Botanical,4,N/A,N/A,Koda Origins,10062,Chemical Goo,2,N/A,N/A,N/A,N/A
+10066,N/A,Volcanic,N/A,N/A,Crimson,2,N/A,N/A,Koda Origins,10066,Chemical Goo,1,N/A,N/A,Pricklia,1
+10068,Forged Pickaxe,Decay,Lunarian,1,Ruins,2,Lunarian,3,Koda Origins,10068,Chemical Goo,2,Runa,2,N/A,N/A
+1007,N/A,Psychedelic,N/A,N/A,Acid,3,N/A,N/A,Koda Origins,1007,Biogenic Swamp,2,N/A,N/A,Nether,2
+10076,Knight's Pail,Spirit,N/A,N/A,Veldan,1,Whisper,1,Koda Origins,10076,Chemical Goo,2,N/A,N/A,Scholara,2

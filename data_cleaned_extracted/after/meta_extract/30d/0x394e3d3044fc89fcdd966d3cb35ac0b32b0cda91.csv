@@ -1,0 +1,26 @@
+token_id,Archetype,Armour,Armour Plug,Background,Body,Clothing,Earrings,Extra,Eyes,Eyewear,Face,HUD,Hair,Hands,Head,Headwear,Helmet,Hood,Mask,Mouth,Neck Plate,Nose,Orb,Patches,Rings,Special,Visor
+1,Golem,N/A,N/A,Orange,Gold,N/A,N/A,N/A,Sad Gold,N/A,N/A,N/A,N/A,N/A,Gold,Gold,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+10000,Agent,N/A,N/A,Black,N/A,Dinner Jacket Purple,N/A,N/A,Original Black,Diamond Eye Black,N/A,N/A,Hightop,Golden Gun,Cobalt,N/A,N/A,N/A,N/A,Cocky Grin,N/A,Ordinary,N/A,N/A,N/A,N/A,N/A
+1002,Motor Corp,N/A,N/A,Sky Blue,N/A,Varsity JKT Blue & Grey,N/A,N/A,Meditation,Moon Frames White,N/A,N/A,Cut Black,N/A,Brick,N/A,N/A,N/A,N/A,Cheesy Grin,N/A,Ordinary,N/A,N/A,N/A,N/A,N/A
+1004,Delinquent,N/A,N/A,Black Smoke,N/A,GM Bright,Dead Talk Pink,Black Cube,Wink Blue,N/A,N/A,N/A,Space 5 Ice,N/A,Sand,N/A,N/A,N/A,N/A,Smirk Blue,N/A,Small,N/A,N/A,N/A,Smoke,N/A
+1006,Samurai,Flower Petal White,N/A,Dawn,N/A,N/A,N/A,N/A,Original,N/A,N/A,N/A,N/A,N/A,Shadow,N/A,Crescent Moon Blue,N/A,Dead Men Grey,Shadow,N/A,Shadow,N/A,N/A,N/A,N/A,N/A
+1008,Robot,N/A,N/A,Golden Garden,SPRK RGLD,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,ATOM XRAY MTL,N/A,N/A,N/A,N/A,N/A,TIE PRPL,N/A,N/A,N/A,N/A,N/A,N/A
+101,Motor Corp,N/A,N/A,Rainbow Night,N/A,Plain Sweater,N/A,N/A,Original Light,N/A,N/A,N/A,N/A,N/A,Granite,Agent Rally: Red Visor Down,N/A,N/A,N/A,Unimpressed,N/A,Ordinary,N/A,N/A,N/A,Night Garden,N/A
+1011,Alchemist,N/A,N/A,Black,N/A,Pullover,N/A,N/A,Original Black,N/A,N/A,N/A,Buzzcut,N/A,Marble,N/A,N/A,N/A,N/A,Cocky Grin,N/A,Wizard,N/A,N/A,N/A,N/A,N/A
+1013,Robot,N/A,X16 SHDW,Eclipse,X17 MK-II RGLD,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,MTL,N/A,N/A,N/A,N/A,N/A,N/A,N/A,RD,N/A,N/A,N/A,AMBER ALERT
+1015,Samurai,Dead Moon Blue,N/A,Blue,N/A,N/A,N/A,N/A,Focus,N/A,N/A,N/A,N/A,N/A,Shadow,N/A,Crescent Moon Grey,N/A,Demon Nara Blue,Shadow,N/A,Shadow,N/A,N/A,N/A,N/A,N/A
+1017,Alchemist,N/A,N/A,Black,N/A,Camo Jacket Dark,N/A,N/A,Original Cafe,N/A,N/A,N/A,N/A,N/A,Cobalt,Wizard Helmet White,N/A,N/A,N/A,Cocky Grin,N/A,Wizard,N/A,N/A,N/A,N/A,N/A
+1019,Delinquent,N/A,N/A,Night,N/A,Black Bomber Vest,CUBED Black,N/A,Squint Black,N/A,N/A,N/A,Afro Black,N/A,Sand,N/A,N/A,N/A,N/A,Blueberry Candy,N/A,Small,N/A,N/A,N/A,N/A,N/A
+1021,Motor Corp,N/A,N/A,Black,N/A,RENGA Spark Black,Tako Rings,N/A,Happy Black,N/A,N/A,N/A,Flower Buns Blonde,N/A,Marble,N/A,N/A,N/A,N/A,Smirk Brown,N/A,Small,N/A,N/A,N/A,N/A,N/A
+1023,Delinquent,N/A,N/A,Dawn,N/A,Bubble JKT Blue,Gold Stud,N/A,Stare Yellow,Tuning In Black,N/A,N/A,Afro Pink,Goodbye,Sand,N/A,N/A,N/A,N/A,Light Red,N/A,Small,N/A,N/A,Black,N/A,N/A
+1025,Agent,N/A,N/A,Afternoon,N/A,Dinner Jacket Purple,N/A,N/A,Creepy Black,Moon Frames Red,N/A,N/A,Cut Blonde,N/A,Sand,N/A,N/A,N/A,N/A,Summer Smile,N/A,Ordinary,N/A,N/A,N/A,N/A,N/A
+1027,Delinquent,N/A,N/A,Red,N/A,Smart Grey,Gold Stud,N/A,Happy Blonde,N/A,N/A,N/A,Flower Buns Silver,Juice Box,Marble,N/A,N/A,N/A,N/A,Angry,N/A,Bandage,N/A,N/A,N/A,N/A,N/A
+1029,Ninja,N/A,N/A,Bamboo Garden,N/A,Shadow Dancer,N/A,N/A,Dark,N/A,N/A,N/A,N/A,N/A,Brick,N/A,N/A,Shadow Dancer Full,Demon Ninja,Cocky Grin,N/A,Straight,N/A,N/A,N/A,Bamboo Garden,N/A
+1030,Robot,N/A,N/A,Blood Moon Smoke,X17 MK-II XRAY CBLT,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,MTL,N/A,N/A,N/A,N/A,N/A,X17 RGLD,N/A,MTL,N/A,N/A,N/A,WARNING
+1032,Robot,N/A,N/A,Off White,X16 XRAY SHDW,N/A,N/A,N/A,N/A,N/A,N/A,SMLE RD,N/A,N/A,X16 MTL,N/A,N/A,N/A,N/A,N/A,X16 RGLD,N/A,N/A,N/A,N/A,N/A,N/A
+1034,Robot,N/A,N/A,Black,X16 XRAY NTRL,STNDRD ISSUE LTHR JKT,N/A,N/A,N/A,N/A,N/A,TDDY RGLD,N/A,N/A,X16 XRAY MTL,N/A,N/A,N/A,N/A,N/A,X16 RGLD,N/A,N/A,DIAMOND SKULL RD,N/A,N/A,N/A
+1036,Robot,N/A,N/A,Red,X16 MTL,N/A,N/A,N/A,N/A,N/A,N/A,DEAD XRAY RGLD,N/A,N/A,X18 XRAY MK-IV CBLT,N/A,N/A,N/A,N/A,N/A,X16 RGLD,N/A,N/A,N/A,N/A,N/A,N/A
+1038,Delinquent,N/A,N/A,Eclipse,N/A,Lightning,CUBED Yellow,N/A,Stare Black,N/A,N/A,N/A,Flower Buns Blonde,Juice Box,Cobalt,N/A,N/A,N/A,N/A,Nice Smile,N/A,Small,N/A,N/A,N/A,N/A,N/A
+1040,CUBE,N/A,N/A,Black,Purple Rain,N/A,N/A,CPU V2,N/A,N/A,Cube Agent Red,N/A,N/A,N/A,Gold Block,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+1042,Alchemist,N/A,N/A,Off White,N/A,Wizard Bomber Jacket,N/A,N/A,Original Light,2D Cool,N/A,N/A,N/A,N/A,Marble,Wizard Hat Blue,N/A,N/A,N/A,Vexxed,N/A,Wizard,N/A,N/A,N/A,N/A,N/A
+1044,Samurai,Dead Moon Blue,N/A,Black,N/A,N/A,N/A,N/A,Circle,N/A,N/A,N/A,N/A,N/A,Shadow,N/A,Demon Nara Green,N/A,Dead Men White,Shadow,N/A,Shadow,N/A,N/A,N/A,N/A,N/A

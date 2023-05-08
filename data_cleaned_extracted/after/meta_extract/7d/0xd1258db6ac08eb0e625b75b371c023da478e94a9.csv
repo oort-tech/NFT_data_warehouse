@@ -1,0 +1,74 @@
+token_id,trait_type,value
+1,Name,Miya
+1,Background,Moon & Birds
+1,Outfit,Winter
+1,Hairstyle,Long & Straight
+1,Accessory,Sea Life
+1,Expression,Brown Eyes
+token_id,trait_type,value
+10,Name,ZhiLei
+10,Background,Night & Sky
+10,Outfit,Hip Hop
+10,Prop,Skateboard
+10,Hairstyle,Double Ponies
+10,Expression,Brown Eyes
+token_id,trait_type,value
+100,Name,Eunji
+100,Background,Moon & Birds
+100,Outfit,Qipao
+100,Prop,Teddy Bear
+100,Hairstyle,Short Bob
+100,Expression,Brown Eyes
+token_id,trait_type,value
+1000,Name,Phyllis
+1000,Background,Night & Sky
+1000,Outfit,Astronaut
+1000,Prop,Cell Phone
+1000,Hairstyle,Long & Straight
+1000,Accessory,Ribbon
+1000,Expression,Brown Eyes
+token_id,trait_type,value
+1001,Name,Esa
+1001,Background,Night & Sky
+1001,Outfit,Sailor
+1001,Prop,Fan
+1001,Hairstyle,Europop
+1001,Accessory,Headphones
+1001,Expression,Brown Eyes
+token_id,trait_type,value
+1002,Name,Hailey
+1002,Background,Amai
+1002,Outfit,Knight
+1002,Hairstyle,Bangs & Buns
+1002,Accessory,Sea Life
+1002,Accessory 2,Intergalactic
+1002,Expression,Brown Eyes
+token_id,trait_type,value
+1003,Name,Naoko
+1003,Background,Amai
+1003,Outfit,Steampunk
+1003,Prop,Skateboard
+1003,Hairstyle,Ponytail
+1003,Expression,Brown Eyes
+token_id,trait_type,value
+1004,Name,XinXia
+1004,Background,Neonpunk
+1004,Outfit,Qipao
+1004,Prop,Cake
+1004,Hairstyle,Pixie
+1004,Accessory,Hairband
+1004,Expression,Gaze Moonrise
+token_id,trait_type,value
+1005,Name,Kanna
+1005,Background,Night & Sky
+1005,Outfit,French Maid
+1005,Hairstyle,Ponytail
+1005,Expression,Brown Eyes
+token_id,trait_type,value
+1006,Name,Maysen
+1006,Background,Moon & Birds
+1006,Outfit,Hip Hop
+1006,Prop,Skateboard
+1006,Prop 2,Boba Tea
+1006,Hairstyle,Pixie
+1006,Expression,Gaze Right

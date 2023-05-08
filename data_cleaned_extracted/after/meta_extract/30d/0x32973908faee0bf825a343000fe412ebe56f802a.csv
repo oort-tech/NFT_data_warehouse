@@ -1,0 +1,26 @@
+token_id,Affinity,Attack,Defense,Evolution,Generation,HP,Hatched On,Luck,Origin,Rarity,Reward Multiplier,Special Attack,Special Defense,Species,State,Unknown 1,Unknown 2
+0,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A
+10,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A
+1000,N/A,N/A,N/A,Evolution 1,N/A,N/A,1645963957,3,Air,Uncommon,N/A,N/A,N/A,Flick,N/A,N/A,N/A
+10001,13,22,29,1,1,36,2022-02-28T22:47:19.892Z,1,Air,Common,0,33,25,Boo,N/A,2,5
+10003,11,49,49,1,1,49,2022-02-25T21:43:56.181Z,1,Earth,Rare,20,80,60,Goloid,N/A,4,2
+1001,1,51,30,1,1,36,2022-05-15T15:48:34.497Z,2,Air,Uncommon,10,41,45,Flick,N/A,5,6
+1003,3,30,42,1,1,63,2022-05-05T18:45:05.099Z,2,Air,Rare,20,65,40,Luna,N/A,3,2
+1005,N/A,N/A,N/A,Evolution 1,N/A,N/A,1646021535,5,Air,Common,N/A,N/A,N/A,Hazerd,N/A,N/A,N/A
+1007,16,57,60,1,1,62,2022-04-30T14:51:16.133Z,1,Earth,Epic,40,71,67,Slyth,N/A,1,1
+1009,N/A,N/A,N/A,Evolution 1,N/A,N/A,1645898522,4,Earth,Common,N/A,N/A,N/A,Buggleberry,N/A,N/A,N/A
+1010,41,100,21,1,1,31,2022-02-28T23:21:08.886Z,1,Air,Common,0,40,34,Fowler,N/A,1,2
+1012,35,17,100,1,1,25,2022-02-26T05:37:48.118Z,5,Water,Common,0,44,30,Arachni,N/A,4,2
+1014,16,63,44,1,1,35,2022-03-03T15:47:50.045Z,2,Fire,Rare,20,58,41,H.0.0.D,N/A,3,4
+1016,N/A,N/A,N/A,Evolution 1,N/A,N/A,1645894304,3,Water,Rare,N/A,N/A,N/A,Octopod,N/A,N/A,N/A
+1018,8,34,18,1,1,37,2022-02-25T21:38:00.943Z,1,Water,Common,0,32,46,Spout,N/A,8,1
+102,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A
+1021,N/A,N/A,N/A,Evolution 1,N/A,N/A,1645838605,1,Fire,Uncommon,N/A,N/A,N/A,Warden,N/A,N/A,N/A
+1023,31,43,29,1,1,40,2022-02-25T23:18:30.737Z,1,Fire,Common,0,20,16,Bulbore,N/A,2,3
+1025,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A
+1027,7,42,38,1,1,41,2022-03-13T23:17:11.235Z,2,Air,Uncommon,10,42,45,Flick,N/A,2,1
+1029,9,31,22,1,1,36,2022-06-06T17:00:31.826Z,1,Air,Common,0,36,44,Teeki,N/A,5,1
+1030,12,49,37,1,1,43,2022-03-01T12:18:33.779Z,1,Air,Uncommon,10,37,53,R2G2,N/A,12,7
+1032,13,8,25,1,1,37,2022-03-10T23:42:29.457Z,3,Fire,Common,0,29,34,Piu Piu,N/A,4,3
+1034,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A
+1036,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,Unhatched,Unhatched,N/A,N/A

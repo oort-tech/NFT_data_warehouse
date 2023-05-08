@@ -1,0 +1,123 @@
+token_id,trait_type,value
+1000,Body,Female
+1000,Feature,Rosy Cheeks
+1000,Hair,Dark Hair
+1000,Mouth Ext.,Cigarette
+token_id,trait_type,value
+1002,Body,Male
+1002,Hair,Mohawk Dark
+token_id,trait_type,value
+1003,Body,Male
+1003,Hair,Frumpy Hair
+1003,Eyes,Nerd Glasses
+token_id,trait_type,value
+1004,Body,Female
+1004,Mouth,Black Lipstick
+1004,Hair,Messy Hair
+token_id,trait_type,value
+1005,Body,Male
+1005,Hair,Purple Hair
+1005,Eyes,Regular Shades
+token_id,trait_type,value
+1006,Body,Male
+1006,Hair,Wild Hair
+1006,Eyes,Regular Shades
+token_id,trait_type,value
+1007,Body,Male
+1007,Earring,Yes
+1007,Hair,Vampire Hair
+1007,Eyes,Regular Shades
+token_id,trait_type,value
+1008,Body,Male
+1008,Mouth,Luxurious Beard
+1008,Earring,Yes
+1008,Hat,Cap Forward
+token_id,trait_type,value
+1009,Body,Male
+1009,Mouth,Luxurious Beard
+1009,Hat,Cap
+token_id,trait_type,value
+1012,Body,Male
+1012,Hair,Mohawk Thin
+1012,Eyes,Eye Patch
+token_id,trait_type,value
+1019,Body,Male
+1019,Chinstrap,Yes
+1019,Headband,Yes
+1019,Eyes,Regular Shades
+token_id,trait_type,value
+1020,Body,Male
+1020,Special,Gold Chain
+1020,Hair,Stringy Hair
+1020,Mouth Ext.,Cigarette
+1020,Eyes,Eye Patch
+token_id,trait_type,value
+1021,Body,Ape
+1021,Hat,Cap
+1021,Eyes,Eye Patch
+token_id,trait_type,value
+1027,Body,Male
+1027,Mouth,Handlebars
+1027,Hat,Hoodie
+1027,Eyes,Eye Mask
+token_id,trait_type,value
+1041,Body,Female
+1041,Mouth,Hot Lipstick
+1041,Hair,Mohawk
+1041,Mouth Ext.,Vape
+1041,Eyes,Purple Eye Shadow
+token_id,trait_type,value
+1043,Body,Female
+1043,Mouth,Purple Lipstick
+1043,Hat,Tassle Hat
+1043,Eyes,Regular Shades
+token_id,trait_type,value
+1044,Body,Male
+1044,Mouth,Normal Beard
+1044,Eyes,VR
+token_id,trait_type,value
+1053,Body,Male
+1053,Mouth,Big Beard
+1053,Hat,Cap Forward
+1053,Eyes,Nerd Glasses
+token_id,trait_type,value
+1060,Body,Male
+1060,Hat,Cowboy Hat
+1060,Eyes,Eye Mask
+token_id,trait_type,value
+1063,Body,Male
+1063,Mouth,Shadow Beard
+1063,Hair,Peak Spike
+token_id,trait_type,value
+1074,Body,Male
+1074,Mouth,Normal Beard Black
+1074,Hat,Cowboy Hat
+token_id,trait_type,value
+1075,Body,Male
+1075,Chinstrap,Yes
+1075,Earring,Yes
+1075,Hat,Cap
+1075,Eyes,Big Shades
+token_id,trait_type,value
+1077,Body,Male
+1077,Mustache,Yes
+1077,Hair,Mohawk Dark
+token_id,trait_type,value
+1092,Body,Female
+1092,Feature,Spots
+1092,Hair,Blonde Short
+1092,Mouth Ext.,Cigarette
+token_id,trait_type,value
+1095,Body,Male
+1095,Mouth,Luxurious Beard
+1095,Earring,Yes
+1095,Hair,Frumpy Hair
+token_id,trait_type,value
+1096,Body,Female
+1096,Mouth,Black Lipstick
+1096,Hair,Mohawk Dark
+token_id,trait_type,value
+1097,Body,Male
+1097,Mole,Yes
+1097,Hair,Frumpy Hair
+1097,Eyes,Nerd Glasses

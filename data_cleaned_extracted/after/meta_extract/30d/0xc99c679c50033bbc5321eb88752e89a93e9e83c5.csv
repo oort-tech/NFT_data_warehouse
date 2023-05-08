@@ -1,0 +1,34 @@
+token_id,trait_type,value
+1,Background,Forgotten Purple
+1,Fur,Pink
+1,Eyes,Dizzy
+1,Eyelids,All
+1,Eyebrows,Happy
+1,Mouth,Sad
+token_id,trait_type,value
+10,Background,Meadowland
+10,Fur,Dark Brown
+10,Eyes,Regular
+10,Eyelids,Top Left
+10,Eyebrows,Angry
+10,Mouth,O
+token_id,trait_type,value
+100,Background,Campanelle Noodle
+100,Fur,Green Gummy
+100,Eyes,Green Gummy
+100,Mouth,Cute
+100,Hair,White
+token_id,trait_type,value
+1000,Background,Bundaberg Sand
+1000,Fur,Pink
+1000,Eyes,Dizzy
+1000,Eyelids,Bottom Right
+1000,Mouth,O
+1000,Clothing,Red Hoodie
+token_id,trait_type,value
+1001,Background,Salmon Nigiri
+1001,Fur,Black
+1001,Eyes,Hollow
+1001,Eyebrows,Happy
+1001,Mouth,Angry Roar
+1001,Clothing,Undershirt

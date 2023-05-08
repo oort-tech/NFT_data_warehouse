@@ -1,0 +1,221 @@
+token_id,trait_type,value
+100,role,Kalie
+100,background,clusters of stars
+100,moon,Rock
+100,Plastid,Basics
+100,shoes,Future Century
+100,head,Future Century
+100,expression,blink
+100,jacket,Future Century
+100,trousers,Future Century
+100,glove,Future Century
+100,Handheld,Fan
+token_id,trait_type,value
+1000,role,Phantom·S
+1000,background,violet
+1000,Summoner,Finance Sparta
+1000,Plastid,Basics
+1000,shoes,classic
+1000,head,dark
+1000,expression,dark
+1000,jacket,dark
+1000,trousers,dark
+1000,glove,dark
+1000,Handheld,Dark Magic Book
+token_id,trait_type,value
+1002,role,King
+1002,background,Gold quantum
+1002,skill,Vector arrow
+1002,Plastid,Basics
+1002,shoes,Cocoon breaking
+1002,expression,Black Cool
+1002,head,Black Aotu VR glasses
+1002,jacket,CyberTech
+1002,trousers,CyberTech
+1002,glove,CyberTech
+1002,Handheld,Meta
+token_id,trait_type,value
+1003,role,King
+1003,background,Future universe
+1003,skill,Cross Vector Arrow
+1003,Plastid,Basics
+1003,shoes,classic
+1003,expression,Cool
+1003,head,Cocoon breaking
+1003,jacket,CyberTech
+1003,trousers,CyberTech
+1003,glove,CyberTech
+1003,Handheld,Vector attack
+token_id,trait_type,value
+1004,role,Grey
+1004,background,forward
+1004,skill,Wave Sword
+1004,shoes,classic
+1004,head,CyberTech
+1004,expression,grim
+1004,jacket,CyberTech
+1004,trousers,CyberTech
+1004,glove,CyberTech
+1004,Handheld,Strong Blade Sky Chop
+token_id,trait_type,value
+1006,role,King
+1006,background,Future universe
+1006,skill,Surf board
+1006,Plastid,Basics
+1006,shoes,classic
+1006,expression,smile
+1006,head,Deep sea
+1006,jacket,classic
+1006,trousers,classic
+1006,glove,classic
+1006,Handheld,Elementary force
+token_id,trait_type,value
+101,role,Kalie
+101,background,clusters of stars
+101,moon,Future Century
+101,Plastid,Basics
+101,shoes,ETH Stockings
+101,head,ETH
+101,expression,laugh
+101,jacket,classic
+101,trousers,classic
+101,Handheld,ice cream
+token_id,trait_type,value
+1015,role,King
+1015,background,Gold quantum
+1015,skill,Surf board
+1015,Plastid,Basics
+1015,shoes,Cocoon breaking
+1015,expression,anger
+1015,head,Aotu VR glasses
+1015,jacket,CyberTech
+1015,trousers,CyberTech
+1015,glove,CyberTech
+1015,Handheld,Vector attack
+token_id,trait_type,value
+1016,role,King
+1016,background,Rioting and blackening
+1016,skill,Vector arrow
+1016,Plastid,Basics
+1016,shoes,Cocoon breaking
+1016,expression,smile
+1016,head,classic
+1016,jacket,Cocoon breaking
+1016,trousers,Cocoon breaking
+1016,glove,Cocoon breaking
+1016,Handheld,Vector attack
+token_id,trait_type,value
+1018,role,Kalie
+1018,background,Blue Demon Concubine
+1018,moon,Future Century
+1018,Plastid,Basics
+1018,shoes,Devil Girl Stockings
+1018,head,Devil Girl
+1018,expression,ordinary
+1018,jacket,classic
+1018,trousers,classic
+1018,Handheld,skewer
+token_id,trait_type,value
+1021,role,King
+1021,background,Gold quantum
+1021,skill,Surf board
+1021,Plastid,Basics
+1021,shoes,Cocoon breaking
+1021,expression,smile
+1021,head,Deep sea
+1021,jacket,Future Century
+1021,trousers,Future Century
+1021,Handheld,Vector attack
+token_id,trait_type,value
+1024,role,Phantom·S
+1024,background,sanctuary
+1024,Summoner,Finance Sparta
+1024,Plastid,Basics
+1024,shoes,classic
+1024,head,fantasy
+1024,expression,laugh
+1024,jacket,classic
+1024,trousers,classic
+1024,glove,classic
+1024,Handheld,Dark Magic Book
+token_id,trait_type,value
+1025,role,Phantom·S
+1025,background,come
+1025,Summoner,Finance Sparta
+1025,Plastid,Basics
+1025,shoes,Yin and Yang Master
+1025,head,detective
+1025,expression,ordinary
+1025,jacket,Yin and Yang Master
+1025,trousers,Yin and Yang Master
+1025,Handheld,Oscar Trophy
+token_id,trait_type,value
+1026,role,Kalie
+1026,background,Blue Demon Concubine
+1026,moon,Future Century
+1026,Plastid,Basics
+1026,shoes,Cocoon breaking
+1026,head,glasses
+1026,expression,laugh
+1026,jacket,Cocoon breaking
+1026,trousers,Cocoon breaking
+1026,glove,Cocoon breaking
+1026,Handheld,Fan
+token_id,trait_type,value
+1029,role,King
+1029,background,Future universe
+1029,skill,Vector arrow
+1029,Plastid,Basics
+1029,shoes,classic
+1029,expression,Become cool
+1029,head,Black Cocoon Breaking
+1029,jacket,Cocoon breaking
+1029,trousers,Cocoon breaking
+1029,glove,Cocoon breaking
+1029,Handheld,Black vector
+token_id,trait_type,value
+1030,role,Grey
+1030,background,purify
+1030,skill,Wave Sword
+1030,shoes,Watcher
+1030,head,classic
+1030,expression,grass
+1030,jacket,CyberTech
+1030,trousers,CyberTech
+1030,glove,CyberTech
+1030,Handheld,baseball bat
+token_id,trait_type,value
+1034,role,Kalie
+1034,background,Blue Demon Concubine
+1034,moon,Rock
+1034,Plastid,Basics
+1034,shoes,ETH
+1034,head,Cocoon breaking
+1034,expression,ordinary
+1034,jacket,ETH
+1034,trousers,ETH
+1034,glove,ETH
+1034,Handheld,ice cream
+token_id,trait_type,value
+1036,role,Kalie
+1036,background,Demon Girl Field
+1036,moon,Rock
+1036,Plastid,Basics
+1036,shoes,ETH Stockings
+1036,head,Devil Girl
+1036,expression,ordinary
+1036,jacket,classic
+1036,trousers,classic
+1036,Handheld,ice cream
+token_id,trait_type,value
+1037,role,King
+1037,background,Future universe
+1037,skill,Vector arrow
+1037,Plastid,Basics
+1037,shoes,Cocoon breaking
+1037,expression,smile
+1037,head,Deep sea
+1037,jacket,Cocoon breaking
+1037,trousers,Cocoon breaking
+1037,glove,Cocoon breaking
+1037,Handheld,Vector attack

@@ -1,0 +1,26 @@
+token_id,Artifact,Category,Eastern Resource,Eastern Resource Tier,Environment,Environment Tier,Koda,Northern Resource,Northern Resource Tier,Obelisk Piece,Plot,Sediment,Sediment Tier,Southern Resource,Southern Resource Tier,Western Resource,Western Resource Tier
+0,N/A,Spirit,Whisper,3,Steppes,4,9068,Moldium,1,First Trip,0,Biogenic Swamp,1,Lumileaf,3,N/A,N/A
+10,N/A,Decay,N/A,N/A,Ruins,1,N/A,Chroma,1,N/A,10,Biogenic Swamp,3,Bonestone,1,Oblivion,2
+1000,N/A,Growth,Bonestone,3,Mycelium,3,N/A,N/A,N/A,First Trip,1000,Biogenic Swamp,1,Spikeweed,1,N/A,N/A
+10001,N/A,Mineral,N/A,N/A,Spires,2,N/A,Moldium,2,N/A,10001,Chemical Goo,2,N/A,N/A,N/A,N/A
+10003,N/A,Volcanic,Kinsoul,3,Obsidian,3,N/A,N/A,N/A,First Trip,10003,Chemical Goo,3,N/A,N/A,N/A,N/A
+10005,N/A,Decay,N/A,N/A,Plague,3,N/A,N/A,N/A,N/A,10005,Chemical Goo,1,Kinsoul,2,N/A,N/A
+10007,Forged Axe,Decay,N/A,N/A,Bog,5,N/A,N/A,N/A,First Trip,10007,Chemical Goo,1,Lunarian,3,N/A,N/A
+10009,N/A,Harsh,N/A,N/A,Glacia,5,9765,N/A,N/A,N/A,10009,Chemical Goo,3,N/A,N/A,Luster,1
+10010,N/A,Harsh,N/A,N/A,Splinter,3,N/A,N/A,N/A,First Trip,10010,Chemical Goo,2,Lunarian,1,N/A,N/A
+10012,N/A,Mineral,Nether,3,Crystal,1,N/A,N/A,N/A,N/A,10012,Chemical Goo,1,N/A,N/A,N/A,N/A
+10014,N/A,Mineral,Oblivion,3,Crystal,1,3279,Oblivion,2,First Trip,10014,Chemical Goo,3,Runa,2,Moldium,1
+10016,N/A,Spirit,Bonestone,3,Sands,1,N/A,N/A,N/A,N/A,10016,Chemical Goo,1,N/A,N/A,N/A,N/A
+10018,N/A,Psychedelic,Lumileaf,1,Sludge,3,N/A,N/A,N/A,First Trip,10018,Chemical Goo,3,N/A,N/A,Psychosilk,2
+1002,N/A,Volcanic,N/A,N/A,Molten,1,N/A,Brimstone,3,N/A,1002,Biogenic Swamp,2,Spikeweed,2,N/A,N/A
+10021,N/A,Volcanic,N/A,N/A,Molten,2,N/A,N/A,N/A,First Trip,10021,Chemical Goo,1,N/A,N/A,N/A,N/A
+10023,N/A,Decay,Spikeweed,2,Thornwood,1,N/A,N/A,N/A,N/A,10023,Chemical Goo,3,N/A,N/A,N/A,N/A
+10025,Relic Card,Decay,Psychosilk,1,Bog,1,869,Oblivion,2,N/A,10025,Chemical Goo,1,Whisper,1,N/A,N/A
+10027,N/A,Harsh,N/A,N/A,Glacia,3,N/A,Psychosilk,1,N/A,10027,Chemical Goo,1,N/A,N/A,N/A,N/A
+10029,N/A,Mineral,N/A,N/A,Crystal,3,N/A,N/A,N/A,N/A,10029,Chemical Goo,2,N/A,N/A,N/A,N/A
+10030,N/A,Mineral,Etheria,1,Crystal,3,N/A,N/A,N/A,N/A,10030,Chemical Goo,1,N/A,N/A,N/A,N/A
+10032,Glass Eye,Spirit,N/A,N/A,Sky,3,N/A,Lunarian,1,N/A,10032,Chemical Goo,1,N/A,N/A,Brimstone,2
+10034,N/A,Harsh,Oblivion,1,Bone,2,N/A,N/A,N/A,N/A,10034,Chemical Goo,2,Nether,1,N/A,N/A
+10036,N/A,Harsh,Shatterfrost,3,Glacia,2,N/A,Petrified,1,First Trip,10036,Chemical Goo,1,Shatterfrost,2,N/A,N/A
+10038,N/A,Spirit,Nebula,1,Steppes,3,5428,N/A,N/A,N/A,10038,Chemical Goo,1,Whisper,1,Runa,2
+1004,N/A,Decay,Kinsoul,1,Thornwood,3,N/A,Nether,1,First Trip,1004,Biogenic Swamp,2,Nether,3,N/A,N/A
