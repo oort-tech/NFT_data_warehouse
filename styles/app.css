@@ -1,0 +1,81 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.MarketHeader {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 20px 30px 8px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: rgb(4, 25, 40);
+}
+
+.NetworkName {
+    padding-left:800px;
+}
+
+/* .AppFooter {
+    height: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: rgb(240, 236, 240);
+} */
+
+.MenuContent {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.PageContent {
+    margin-top: 4px;
+    height: 736px;
+    width: 1225px;
+    /* background-color: rgb(4, 25, 40); */
+}
+
+.NFTcontent {
+    position: relative;
+    background-color: rgb(254, 239, 255);
+    padding-top: 1.5rem;
+    padding-bottom: 5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 726px;
+    width: 1550px;
+}
+
+.SideMenu {
+    
+    margin-top: 4px;
+    height: 726px;
+    background-color: rgb(4, 25, 40);
+
+}
+
+.AntdMenu {
+    color: aliceblue;
+    background-color: rgb(4, 25, 40);
+}
+
+/* .video-background {
+    position: absolute;
+    top: 75px;
+    left: 170px;
+    width: 91%;
+    height: 87%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+} */

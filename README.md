@@ -1,37 +1,40 @@
-# NFTVerse Data Warehouse
+This is a [Next.js](https://nextjs.org/) project. Full process and video lectures how to create the application can be found here: [NFT Marketplace in React, Typescript & Solidity - Full Guide
+](https://academy.eincode.com/courses/nft-marketplace-in-react-js-next-typescript-full-guide)
 
-## Overview:
-NFTVerse Data Warehouse is a comprehensive NFT data storage and retrieval system that combines on-chain NFT transaction history, metadata, and off-chain NFT multimedia content such as images and videos stored on the InterPlanetary File System (IPFS). The project aims to provide an easy-to-use API for developers to build novel NFT applications and analytics tools to foster innovation and growth within the NFT ecosystem.
+## Overview
 
-## Components:
+Marketplace has dependencies on multiple technologies.
 
-### Data Collection:
-The data collection module aggregates NFT transaction data and metadata from various blockchain networks (e.g., Ethereum, Binance Smart Chain, Solana) using their respective APIs. Off-chain NFT multimedia content is fetched from IPFS using the content hash provided in the metadata. Data is collected in real-time to ensure the most up-to-date information is available for developers.
+* [Pinata](https://app.pinata.cloud/) - store images, and NFT metadata
+* [Ganache](https://trufflesuite.com/ganache/) - private Blockchain, to run application localy
 
-### Data Processing:
-Collected data is cleaned, validated, and enriched with additional details (e.g., token standard, NFT collection name) before being stored in the data warehouse. The data processing module also handles deduplication and normalization of the data across different blockchain networks to provide a unified view.
+## To run the app
+1. run `npm install` to install dependencies
 
-### Data Storage:
-The data warehouse is built on a scalable and distributed database system optimized for handling large volumes of structured and semi-structured data. This system ensures low-latency queries and high availability for the APIs built on top of it.
+2. In the root folder of the application create a `.env.development` file with following content:
 
-### API Layer:
-The API layer provides a suite of RESTful APIs for developers to access the data warehouse. It offers endpoints for querying NFT transaction history, metadata, and multimedia content, along with advanced search and filtering capabilities. The API layer also handles authentication and rate limiting to ensure fair usage and security.
+```
+NEXT_PUBLIC_NETWORK_ID=5777
+NEXT_PUBLIC_TARGET_CHAIN_ID=1337
+NEXT_PUBLIC_PINATA_DOMAIN=https://gateway.pinata.cloud
 
-### Documentation and Developer Portal:
-A comprehensive documentation and developer portal is available to help developers understand the API usage, access sample code, and explore interactive API documentation. This portal also offers a community forum for developers to discuss ideas, ask questions, and share their NFT application projects.
+SECRET_COOKIE_PASSWORD={your custom at least 32 characters long password!}
 
-## Possible Use Cases:
+PINATA_API_KEY={your api key from pinata}
+PINATA_SECRET_API_KEY={your api secret key from pinata}
+```
+* (your api pinata key has to allow `pinFileToIPFS` and `pinJSONToIPFS` rules)
 
-### NFT Analytics Platform:
-Developers can create an analytics platform that tracks the performance of various NFT collections, marketplaces, and individual tokens, providing insights into trends, sales volume, and pricing.
+3. Then migrate a contract to Ganache, contract can be found in the `contracts` folder. It's called `NftMarket.sol`
 
-### NFT Discovery and Recommendation Engine:
-Using the data warehouse, developers can build a recommendation engine that helps users discover new NFTs based on their preferences, browsing history, and social network.
+* To migrate the contract run `truffle migrate` in the terminal while Ganache network is setup and running.
 
-### NFT Portfolio Management:
-Developers can create an NFT portfolio management app that allows users to track their NFT holdings, analyze their investments, and make informed decisions on buying or selling NFTs.
+* Do not forget to link `trufle-config.js` with Ganache, just go to `config` and click `Add Project`
 
-### NFT-based Gaming and Virtual Worlds:
-The API can be used to develop novel gaming experiences and virtual worlds where users can showcase, trade, or interact with their NFTs in an immersive environment.
+* `keys.json` must be created if you want to deploy to Ropsten, if not, just remove import of `keys.json` from `trufle-config.js` and also comment out `ropsten` configuration
 
-By providing a robust and comprehensive data warehouse solution for NFTs, the NFTVerse Data Warehouse project aims to fuel innovation and growth in the NFT ecosystem by offering developers a powerful toolset for creating cutting-edge NFT applications.
+4. Now everything is setup and you can test out the app.
+
+* Run `npm run dev` in the terminal. App will run at `localhost:3000`
+
+5. The test cases are written in the test folder. The first test case checks that a new NFT can be created and its name and description are set correctly. The second test case checks that ownership of an NFT can be transferred to another account. The third test case checks that an NFT can be listed for sale with a specific price. The fourth test case checks that an NFT can be removed from sale. The final test case checks that a successful purchase of an NFT can be executed. The fourth test case checks that only the owner of an NFT can remove it from sale.
