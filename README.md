@@ -1,13 +1,65 @@
 # NFTVerse GraphQL Subgraph
 
-## Implementation
+## `atomicMatch_()` Input Deep Dive
+addrs[14]:
+- `[0]`: exchange address; typically WyvernExchange’s contact address
+- `[1]`: buy.maker; same as sell.taker; indicating the side of sell, depending on whether it’s a buy-side order or a sell-side order
+- `[2]`: buy.taker; same as sell.maker; ditto
+- `[3]`: buy.feeRecipient; the recipient address that’s going to receive fees from order makers; there’s only one of buy.feeRecipient or sell.feeRecipient that can be defined.
+- `[4]`: buy.target; a target address that will receive delegatecall or call from the exchange, typically used to conduct NFT transfer, it is typically one of the following values:
+  - The NFT address being traded
+  - The MerkleValidator address, which performs Merkle root validation prior to accessing the NFT address.
+  - The WyvernAtomizer address, which is the handler for bundle sale of NFTs
+- `[5]`: buy.staticTarget: a static target that the exchange can call, this is uncommon.
+- `[6]`: buy.paymentToken: token address that is used for payment, if it is 0x0, ETH is used.
+- `[7]`: sell.exchange, same as buy.exchange
+- `[8]`: sell.maker, same as buy.taker
+- `[9]`: sell.taker, same as buy.maker
+- `[10]`: sell.feeRecipient, only one can be defined with buy.feeRecipient
+- `[11]`: sell.target: same as buy.target
+- `[12]`: sell.staticTarget: ditto, uncommon to be used
+- `[13]`: sell.paymentToken:  same as buy.paymentToken
 
-TODO:
+uints:
+- `[0]`: buy.makerRelayFee. royalty fee paid to the original creator at buy.feeRecipient from buy.maker
+- `[1]`: buy.takerRelayFee. royalty fee paid to the original creator at sell.feeRecipient from sell.maker
+- `[2]`: buy.makerProtocolFee. protocol charge fee paid to the exchange from buy.maker
+- `[3]`: buy.takerProtocolFee. protocol charge fee paid to the exchange from sell.maker
+- `[4]`: buy.basePrice. base price for the order listing.
+- `[5]`: buy.extra. extra price to be adjusted over time automatically to the base price. e.g. the sell prices wane over time as auction is closer to the end.
+- `[6]`: buy.listingTime
+- `[7]`: buy.expirationTime
+- `[8]`: buy.salt. just some random value for order dedup.
+- `[9]`: sell.makerRelayFee. ditto, royalty fee paid from sell.maker.
+- ... simply replace `[0]` - `[8]`'s buyer with seller.
 
-## Unit Testing
+feeMethodsSidesKindsHowToCalls:
+- `[0]`: buy.feeMethod. Either Protocol or SplitFee, if is Protocol method, fees are not sent to the exchange, but directly to the fee.Recipients.
+- `[1]`: buy.side. typically buyer
+- `[2]`: buy.saleKind. Fixed (i.e. Direct purchase) or Auction.
+- `[3]`: buy.howToCall. Either Call or Delegatecall. Call is typically issued directly to NFT targets mentioned above to conduct transfer, delegatecall is typically issued to MerkleValidator or WyvernAtomicizer to forward the actual transfer.
+- `[4] - [8]`: sell.[...] correspondence
+
+calldataBuy: a hex representation of `0x{functionSelector}${functionArg1}{functionArg2}...`, containing data to forward to the buy/sell.target to perform actual token transfer. Types of `functionSelector` are listed [here](./opensea-subgraph-dev/src/utils.ts).
+
+calldataBuy: similar to calldataBuy.
+
+replacementPatternBuy: a hex mask used to transform calldataBuy and calldataSell into the merged call data used to perform `.call` or `.delegatecall`.
+
+replacementPatternSell: ditto.
+
+staticExtradataBuy: extra data to call to buy.staticTarget, uncommon.
+
+staticExtratdataSell: extra data to call to sell.staticTarget, uncommon.
+
+vs: signature verification related
+
+rssMetadata: signature verification related
+
+## Unit / Integration Testing
 
 TODO: write a bunch of unit tests to test our function handling.
-## Integration Testing
+## Smoke Testing
 
 For the intergration test, we want to simulate several (almost) real NFT trading scenarios on our test blockchain network, and check if our indexer can work seamlessly with those.
 ### Dependencies
