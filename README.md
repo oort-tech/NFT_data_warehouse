@@ -1,12 +1,12 @@
 # Ether Painting: an NFT painting displayer based on blockchain
 
-**Xuechen Zhou (xz3153) **
+**Xuechen Zhou (xz3153)**
 
-**Danling Wei (dw3033) **
+**Danling Wei (dw3033)**
 
-**Yongjie Fu (yf2578) **
+**Yongjie Fu (yf2578)**
 
-**Yu Wu (yw3748) **
+**Yu Wu (yw3748)**
 
 **Tong Wu (tw2906)**
 
