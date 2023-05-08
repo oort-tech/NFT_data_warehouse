@@ -5,7 +5,14 @@ import {
   Bytes,
   ethereum,
 } from "@graphprotocol/graph-ts";
-import { AtomicMatch_Call } from "../generated/OpenSea/OpenSea";
+
+import {ERC165} from "../generated/OpenSea/ERC165";
+import {NftMetadata} from "../generated/OpenSea/NftMetadata";
+import {AtomicMatch_Call} from "../generated/OpenSea/OpenSea";
+import {Asset,
+        Collection,
+        User} from "../generated/schema";
+
 import {
   BIGDECIMAL_ZERO,
   BIGINT_ONE,
@@ -18,34 +25,28 @@ import {
   MATCH_ERC1155_SAFE_TRANSFER_FROM_SELECTOR,
   MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR,
   MATCH_ERC721_TRANSFER_FROM_SELECTOR,
+  NftStandard,
   NULL_ADDRESS,
   NUM_WEI_IN_ETH,
-  NftStandard,
   SaleKind,
   Side,
   TRANSFER_FROM_SELECTOR,
 } from "./constants";
-import { ERC165 } from "../generated/OpenSea/ERC165";
-import { NftMetadata } from "../generated/OpenSea/NftMetadata";
-import { Asset, Collection, User } from "../generated/schema";
-import { log } from '@graphprotocol/graph-ts'
 
-export class DecodedTransferResult {
+export class DecodedCallDataResult {
   constructor(
-    public readonly functionSelector: string,
-    public readonly from: Address,
-    public readonly to: Address,
-    public readonly token: Address,
-    public readonly tokenId: BigInt,
-    public readonly amount: BigInt
-  ) { }
+      public readonly functionSelector: string,
+      public readonly from: Address,
+      public readonly to: Address,
+      public readonly token: Address,
+      public readonly tokenId: BigInt,
+      public readonly amount: BigInt) {}
 }
 
-export class DecodedAtomicizeResult {
+export class DecodedAtomicCallDataResult {
   constructor(
-    public readonly targets: Address[],
-    public readonly callDatas: Bytes[]
-  ) { }
+      public readonly targets: Address[],
+      public readonly callDatas: Bytes[]) {}
 }
 
 /**
@@ -61,11 +62,7 @@ export function getFunctionSelector(callData: Bytes): string {
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/exchange/SaleKindInterface.sol#L22
  */
 export function getOrderSide(side: i32): string {
-  if (side == 0) {
-    return Side.BUY;
-  } else {
-    return Side.SELL;
-  }
+  return side == 0 ? Side.BUY : Side.SELL;
 }
 
 /**
@@ -73,11 +70,7 @@ export function getOrderSide(side: i32): string {
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/exchange/SaleKindInterface.sol#L29
  */
 export function getSaleKind(saleKind: i32): string {
-  if (saleKind == 0) {
-    return SaleKind.DIRECT_PURCHASE;
-  } else {
-    return SaleKind.AUCTION;
-  }
+  return saleKind == 0 ? SaleKind.DIRECT_PURCHASE : SaleKind.AUCTION;
 }
 
 /**
@@ -86,13 +79,12 @@ export function getSaleKind(saleKind: i32): string {
 export function validateCallDataFunctionSelector(callData: Bytes): boolean {
   const functionSelector = getFunctionSelector(callData);
   return (
-    functionSelector == TRANSFER_FROM_SELECTOR ||
-    functionSelector == ERC721_SAFE_TRANSFER_FROM_SELECTOR ||
-    functionSelector == ERC1155_SAFE_TRANSFER_FROM_SELECTOR ||
-    functionSelector == MATCH_ERC721_TRANSFER_FROM_SELECTOR ||
-    functionSelector == MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR ||
-    functionSelector == MATCH_ERC1155_SAFE_TRANSFER_FROM_SELECTOR
-  );
+      functionSelector == TRANSFER_FROM_SELECTOR ||
+      functionSelector == ERC721_SAFE_TRANSFER_FROM_SELECTOR ||
+      functionSelector == ERC1155_SAFE_TRANSFER_FROM_SELECTOR ||
+      functionSelector == MATCH_ERC721_TRANSFER_FROM_SELECTOR ||
+      functionSelector == MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR ||
+      functionSelector == MATCH_ERC1155_SAFE_TRANSFER_FROM_SELECTOR);
 }
 
 /**
@@ -100,20 +92,16 @@ export function validateCallDataFunctionSelector(callData: Bytes): boolean {
  * Creates a list of calldatas which can be decoded in decodeSingleNftData
  */
 export function atomicizeCallData(
-  callDatas: Bytes,
-  callDataLengths: BigInt[]
-): Bytes[] {
+    callDatas: Bytes,
+    callDataLengths: BigInt[]): Bytes[] {
   const atomicizedCallData: Bytes[] = [];
   let index = 0;
   for (let i = 0; i < callDataLengths.length; i++) {
     const length = callDataLengths[i].toI32();
-    const callData = Bytes.fromUint8Array(
-      callDatas.subarray(index, index + length)
-    );
+    const callData = Bytes.fromUint8Array(callDatas.subarray(index, index + length));
     atomicizedCallData.push(callData);
     index += length;
   }
-
   return atomicizedCallData;
 }
 
@@ -134,14 +122,13 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
 
   // Calculate sell price
   const sellPrice = calculateFinalPrice(
-    sellSide,
-    sellSaleKind,
-    sellBasePrice,
-    sellExtra,
-    sellListingTime,
-    sellExpirationTime,
-    call.block.timestamp
-  );
+      sellSide,
+      sellSaleKind,
+      sellBasePrice,
+      sellExtra,
+      sellListingTime,
+      sellExpirationTime,
+      call.block.timestamp);
 
   const buySide = call.inputs.feeMethodsSidesKindsHowToCalls[1];
   const buySaleKind = call.inputs.feeMethodsSidesKindsHowToCalls[2];
@@ -152,14 +139,13 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
 
   // Calculate buy price
   const buyPrice = calculateFinalPrice(
-    buySide,
-    buySaleKind,
-    buyBasePrice,
-    buyExtra,
-    buyListingTime,
-    buyExpirationTime,
-    call.block.timestamp
-  );
+      buySide,
+      buySaleKind,
+      buyBasePrice,
+      buyExtra,
+      buyListingTime,
+      buyExpirationTime,
+      call.block.timestamp);
 
   // If is sell-side order, use the sell price (i.e. use the user's listing price),
   // otherwise is buy-side order (i.e. auction), then we use the final buy bid price
@@ -175,28 +161,20 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
  * https://docs.soliditylang.org/en/v0.4.26/units-and-global-variables.html?highlight=now#block-and-transaction-properties
  */
 export function calculateFinalPrice(
-  side: i32,
-  saleKind: i32,
-  basePrice: BigInt,
-  extra: BigInt,
-  listingTime: BigInt,
-  expirationTime: BigInt,
-  now: BigInt
-): BigInt {
-  if (getSaleKind(saleKind) == SaleKind.DIRECT_PURCHASE) {
+    side: i32,
+    saleKind: i32,
+    basePrice: BigInt,
+    extra: BigInt,
+    listingTime: BigInt,
+    expirationTime: BigInt,
+    now: BigInt): BigInt {
+  if (getSaleKind(saleKind) == SaleKind.DIRECT_PURCHASE)
     return basePrice;
-  } else if (getSaleKind(saleKind) == SaleKind.AUCTION) {
-    const diff = extra
-      .times(now.minus(listingTime))
-      .div(expirationTime.minus(listingTime));
-    if (getOrderSide(side) == Side.SELL) {
-      return basePrice.minus(diff);
-    } else {
-      return basePrice.plus(diff);
-    }
-  } else {
+  else if (getSaleKind(saleKind) == SaleKind.AUCTION) {
+    const diff = extra.times(now.minus(listingTime)).div(expirationTime.minus(listingTime));
+    return getOrderSide(side) == Side.SELL ? basePrice.minus(diff) : basePrice.plus(diff);
+  } else
     return BIGINT_ZERO;
-  }
 }
 
 /**
@@ -205,15 +183,13 @@ export function calculateFinalPrice(
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/common/ArrayUtils.sol#L28
  */
 export function guardedArrayReplace(
-  _array: Bytes,
-  _replacement: Bytes,
-  _mask: Bytes
-): Bytes {
+    _array: Bytes,
+    _replacement: Bytes,
+    _mask: Bytes): Bytes {
   // If replacementPattern is empty, meaning that both arrays buyCallData == sellCallData,
   // no merging is necessary. Returns first array (buyCallData)
-  if (_mask.length == 0) {
+  if (_mask.length == 0)
     return _array;
-  }
 
   // Copies original Bytes Array to avoid buffer overwrite
   const array = Bytes.fromUint8Array(_array.slice(0));
@@ -241,29 +217,17 @@ export function guardedArrayReplace(
  * https://www.4byte.directory/signatures/?bytes4_signature=0x42842e0e
  */
 export function decodeERC721TransferMethod(
-  target: Address,
-  callData: Bytes
-): DecodedTransferResult {
+    target: Address,
+    callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const dataWithoutFunctionSelector = Bytes.fromUint8Array(
-    callData.subarray(4)
-  );
+  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
 
-  const decoded = ethereum
-    .decode("(address,address,uint256)", dataWithoutFunctionSelector)!
-    .toTuple();
+  const decoded = ethereum.decode("(address,address,uint256)", cleanData)!.toTuple();
   const senderAddress = decoded[0].toAddress();
   const recieverAddress = decoded[1].toAddress();
   const tokenId = decoded[2].toBigInt();
 
-  return new DecodedTransferResult(
-    functionSelector,
-    senderAddress,
-    recieverAddress,
-    target,
-    tokenId,
-    BIGINT_ONE
-  );
+  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, target, tokenId, BIGINT_ONE);
 }
 
 /**
@@ -273,36 +237,19 @@ export function decodeERC721TransferMethod(
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes)
  */
 export function decodeERC1155TransferResult(
-  target: Address,
-  callData: Bytes
-): DecodedTransferResult {
+    target: Address,
+    callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const dataWithoutFunctionSelector = Bytes.fromUint8Array(
-    callData.subarray(4)
-  );
-  const dataWithoutFunctionSelectorWithPrefix = ETHABI_DECODE_PREFIX.concat(
-    dataWithoutFunctionSelector
-  );
+  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
 
-  const decoded = ethereum
-    .decode(
-      "(address,address,uint256,uint256,bytes)",
-      dataWithoutFunctionSelectorWithPrefix
-    )!
-    .toTuple();
+  const decoded = ethereum.decode("(address,address,uint256,uint256,bytes)", prefixedData)!.toTuple();
   const senderAddress = decoded[0].toAddress();
   const recieverAddress = decoded[1].toAddress();
   const tokenId = decoded[2].toBigInt();
   const amount = decoded[3].toBigInt();
 
-  return new DecodedTransferResult(
-    functionSelector,
-    senderAddress,
-    recieverAddress,
-    target,
-    tokenId,
-    amount
-  );
+  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, target, tokenId, amount);
 }
 
 /**
@@ -315,21 +262,12 @@ export function decodeERC1155TransferResult(
  * Ref: https://medium.com/@r2d2_68242/indexing-transaction-input-data-in-a-subgraph-6ff5c55abf20
  */
 export function decodeMatchERC721UsingCriteriaResult(
-  callData: Bytes
-): DecodedTransferResult {
+    callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const dataWithoutFunctionSelector = Bytes.fromUint8Array(
-    callData.subarray(4)
-  );
-  const dataWithoutFunctionSelectorWithPrefix = ETHABI_DECODE_PREFIX.concat(
-    dataWithoutFunctionSelector
-  );
+  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
 
-  const rawDecoded = ethereum
-    .decode(
-      "(address,address,address,uint256,bytes32,bytes32[])",
-      dataWithoutFunctionSelectorWithPrefix
-    )
+  const rawDecoded = ethereum.decode("(address,address,address,uint256,bytes32,bytes32[])", prefixedData);
 
   const decoded = rawDecoded!.toTuple();
   const senderAddress = decoded[0].toAddress();
@@ -337,14 +275,7 @@ export function decodeMatchERC721UsingCriteriaResult(
   const nftContractAddress = decoded[2].toAddress();
   const tokenId = decoded[3].toBigInt();
 
-  return new DecodedTransferResult(
-    functionSelector,
-    senderAddress,
-    recieverAddress,
-    nftContractAddress,
-    tokenId,
-    BIGINT_ONE
-  );
+  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, nftContractAddress, tokenId, BIGINT_ONE);
 }
 
 /**
@@ -352,35 +283,19 @@ export function decodeMatchERC721UsingCriteriaResult(
  * 0x96809f90 matchERC1155UsingCriteria(address,address,address,uint256,uint256,bytes32,bytes32[])
  * NOTE: needs ETHABI_DECODE_PREFIX to decode calldata contains arbitrary bytes/bytes array
  */
-export function decodeMatchERC1155UsingCriteriaResult(callData: Bytes): DecodedTransferResult {
+export function decodeMatchERC1155UsingCriteriaResult(callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const dataWithoutFunctionSelector = Bytes.fromUint8Array(
-    callData.subarray(4)
-  );
-  const dataWithoutFunctionSelectorWithPrefix = ETHABI_DECODE_PREFIX.concat(
-    dataWithoutFunctionSelector
-  );
+  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
 
-  const decoded = ethereum
-    .decode(
-      "(address,address,address,uint256,uint256,bytes32,bytes32[])",
-      dataWithoutFunctionSelectorWithPrefix
-    )!
-    .toTuple();
+  const decoded = ethereum.decode("(address,address,address,uint256,uint256,bytes32,bytes32[])", prefixedData)!.toTuple();
   const senderAddress = decoded[0].toAddress();
   const recieverAddress = decoded[1].toAddress();
   const nftContractAddress = decoded[2].toAddress();
   const tokenId = decoded[3].toBigInt();
   const amount = decoded[4].toBigInt();
 
-  return new DecodedTransferResult(
-    functionSelector,
-    senderAddress,
-    recieverAddress,
-    nftContractAddress,
-    tokenId,
-    amount
-  );
+  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, nftContractAddress, tokenId, amount);
 }
 
 /**
@@ -388,48 +303,36 @@ export function decodeMatchERC1155UsingCriteriaResult(callData: Bytes): DecodedT
  * 0x68f0bcaa atomicize(address[],uint256[],uint256[],bytes)
  * https://www.4byte.directory/signatures/?bytes4_signature=0x68f0bcaa
  */
-export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicizeResult {
-  const dataWithoutFunctionSelector = Bytes.fromUint8Array(
-    callData.subarray(4)
-  );
-  const dataWithoutFunctionSelectorWithPrefix = ETHABI_DECODE_PREFIX.concat(
-    dataWithoutFunctionSelector
-  );
-  const decoded = ethereum
-    .decode(
-      "(address[],uint256[],uint256[],bytes)",
-      dataWithoutFunctionSelectorWithPrefix
-    )!
-    .toTuple();
+export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicCallDataResult {
+  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
+  const decoded = ethereum.decode("(address[],uint256[],uint256[],bytes)", prefixedData)!.toTuple();
   // target for each item
   const targets = decoded[0].toAddressArray();
-  // length of calldata for each item 
+  // length of calldata for each item
   const callDataLengths = decoded[2].toBigIntArray();
   // actual calldata for each item
   const callDatas = decoded[3].toBytes();
   const atomicizedCallDatas = atomicizeCallData(callDatas, callDataLengths);
 
-  return new DecodedAtomicizeResult(targets, atomicizedCallDatas);
+  return new DecodedAtomicCallDataResult(targets, atomicizedCallDatas);
 }
 
 /**
  * Determine which decoding logic we should use depending on the functionSelector.
  */
-export function decodeNftTransferResult(target: Address, callData: Bytes): DecodedTransferResult {
+export function decodeNftTransferResult(target: Address, callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  if (
-    functionSelector == TRANSFER_FROM_SELECTOR ||
-    functionSelector == ERC721_SAFE_TRANSFER_FROM_SELECTOR
-  ) {
+  switch (functionSelector) {
+  case TRANSFER_FROM_SELECTOR:
+  case ERC721_SAFE_TRANSFER_FROM_SELECTOR:
     return decodeERC721TransferMethod(target, callData);
-  } else if (
-    functionSelector == MATCH_ERC721_TRANSFER_FROM_SELECTOR ||
-    functionSelector == MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR
-  ) {
+  case MATCH_ERC721_TRANSFER_FROM_SELECTOR:
+  case MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR:
     return decodeMatchERC721UsingCriteriaResult(callData);
-  } else if (functionSelector == ERC1155_SAFE_TRANSFER_FROM_SELECTOR) {
+  case ERC1155_SAFE_TRANSFER_FROM_SELECTOR:
     return decodeERC1155TransferResult(target, callData);
-  } else {
+  default:
     return decodeMatchERC1155UsingCriteriaResult(callData);
   }
 }
@@ -453,21 +356,19 @@ export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAdd
       // ERC721 standard [[tokenURI]] interfacec to find the URI of the NFT asset.
       // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol#L93
       const erc721TokenURIResult = contract.try_tokenURI(tokenId);
-      if (!erc721TokenURIResult.reverted) {
+      if (!erc721TokenURIResult.reverted)
         asset.tokenURI = erc721TokenURIResult.value;
-      }
     } else if (nftStandard == NftStandard.ERC1155) {
       // ERC1155 standard [[uri]] interface to find the URI of the NFT asset.
       // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC1155/ERC1155.sol#L59
       const erc1155TokenURIResult = contract.try_uri(tokenId);
-      if (!erc1155TokenURIResult.reverted) {
+      if (!erc1155TokenURIResult.reverted)
         asset.tokenURI = erc1155TokenURIResult.value;
-      }
     }
     asset.tokenId = tokenId;
+    asset.owner = ownerAddr;
     asset.collection = collectionAddr;
     asset.tradeCount = 0;
-    asset.owner = ownerAddr;
     asset.save();
   }
   return asset;
@@ -477,22 +378,14 @@ export function getOrCreateCollection(collectionID: string): Collection {
   let collection = Collection.load(collectionID);
   if (!collection) {
     collection = new Collection(collectionID);
-
     collection.nftStandard = getNftStandard(collectionID);
     const contract = NftMetadata.bind(Address.fromString(collectionID));
-
-    const nameResult = contract.try_name();
-    if (!nameResult.reverted) {
-      collection.name = nameResult.value;
-    }
-    const symbolResult = contract.try_symbol();
-    if (!symbolResult.reverted) {
-      collection.symbol = symbolResult.value;
-    }
-    const totalSupplyResult = contract.try_totalSupply();
-    if (!totalSupplyResult.reverted) {
-      collection.totalSupply = totalSupplyResult.value;
-    }
+    if (!contract.try_name().reverted)
+      collection.name = contract.try_name().value;
+    if (!contract.try_symbol().reverted)
+      collection.symbol = contract.try_symbol().value;
+    if (!contract.try_totalSupply().reverted)
+      collection.totalSupply = contract.try_totalSupply().value;
 
     collection.royaltyFee = BIGDECIMAL_ZERO;
     collection.cumulativeTradeVolumeETH = BIGDECIMAL_ZERO;
@@ -512,21 +405,12 @@ export function getOrCreateCollection(collectionID: string): Collection {
  */
 function getNftStandard(collectionID: string): string {
   const erc165 = ERC165.bind(Address.fromString(collectionID));
-
-  const isERC721Result = erc165.try_supportsInterface(
-    Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER)
-  );
-  if (!isERC721Result.reverted && isERC721Result.value) {
+  const isERC721Result = erc165.try_supportsInterface(Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER));
+  if (!isERC721Result.reverted && isERC721Result.value)
     return NftStandard.ERC721;
-  }
-
-  const isERC1155Result = erc165.try_supportsInterface(
-    Bytes.fromHexString(ERC1155_INTERFACE_IDENTIFIER)
-  );
-  if (!isERC1155Result.reverted && isERC1155Result.value) {
+  const isERC1155Result = erc165.try_supportsInterface(Bytes.fromHexString(ERC1155_INTERFACE_IDENTIFIER));
+  if (!isERC1155Result.reverted && isERC1155Result.value)
     return NftStandard.ERC1155;
-  }
-
   return NftStandard.UNKNOWN;
 }
 
@@ -536,39 +420,27 @@ function getNftStandard(collectionID: string): string {
 export function calculateTradePriceETH(call: AtomicMatch_Call, paymentToken: Address): BigDecimal {
   // NULL_ADDRESS means this is traded using ETH.
   // OpenSea techinically supports other token types, but we do not consider them for simplicity for now.
-  if (paymentToken == NULL_ADDRESS) {
-    // Prices returns in Wei units
-    const price = calculateMatchPrice(call);
-    return price.toBigDecimal().div(NUM_WEI_IN_ETH);
-  } else {
-    return BIGDECIMAL_ZERO;
-  }
+  return paymentToken == NULL_ADDRESS ? calculateMatchPrice(call).toBigDecimal().div(NUM_WEI_IN_ETH) : BIGDECIMAL_ZERO;
 }
 
 /**
  * Decode a single NFT transfer from calldata. If the call's functionSelector is not recognized, return null (ignored).
  */
-export function decodeSingleTransferResult(target: Address, callData: Bytes): DecodedTransferResult | null {
-  if (!validateCallDataFunctionSelector(callData)) {
-    return null;
-  } else {
-    return decodeNftTransferResult(target, callData);
-  }
+export function decodeSingleTransferResult(target: Address, callData: Bytes): DecodedCallDataResult|null {
+  return validateCallDataFunctionSelector(callData) ? decodeNftTransferResult(target, callData) : null;
 }
 
 /**
  * Decode a bundled NFT tranfer from calldata. Ignore any transfer if the functionSelector is not recognized.
  */
-export function decodeBundleNftTransferResults(callDatas: Bytes): DecodedTransferResult[] {
-  const decodedTransferResults: DecodedTransferResult[] = [];
+export function decodeBundleNftTransferResults(callDatas: Bytes): DecodedCallDataResult[] {
+  const decodedTransferResults: DecodedCallDataResult[] = [];
   const decodedAtomicizeResult = decodeAtomicizeCall(callDatas);
   for (let i = 0; i < decodedAtomicizeResult.targets.length; i++) {
     const target = decodedAtomicizeResult.targets[i];
     const calldata = decodedAtomicizeResult.callDatas[i];
     const singleTransferResult = decodeSingleTransferResult(target, calldata)
-    if (singleTransferResult) {
-      decodedTransferResults.push(singleTransferResult);
-    }
+    if (singleTransferResult) decodedTransferResults.push(singleTransferResult);
   }
   return decodedTransferResults;
 }
