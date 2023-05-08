@@ -1,4 +1,4 @@
-# FinalProject_NFTmarketPlace_6883
+# FinalProject_NFTmarketPlace_6883 - Topic 1 NFT Marketplace
 
 ## Github Structure
 ### Top Level
