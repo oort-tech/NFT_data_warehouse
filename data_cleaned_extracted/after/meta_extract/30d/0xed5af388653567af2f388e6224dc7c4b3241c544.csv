@@ -1,0 +1,33 @@
+token_id,trait_type,value
+0,Type,Human
+0,Hair,Water
+0,Clothing,Pink Oversized Kimono
+0,Eyes,Striking
+0,Mouth,Frown
+0,Offhand,Monkey King Staff
+0,Background,Off White A
+token_id,trait_type,value
+1,Type,Human
+1,Hair,Pink Hairband
+1,Clothing,White Qipao with Fur
+1,Eyes,Daydreaming
+1,Mouth,Lipstick
+1,Offhand,Gloves
+1,Background,Off White D
+token_id,trait_type,value
+10,Type,Human
+10,Hair,Green Samurai
+10,Headgear,Black Bucket Hat
+10,Clothing,Blue Kimono
+10,Eyes,Closed
+10,Mouth,Chuckle
+10,Offhand,Sakura Katana
+10,Background,Off White C
+token_id,trait_type,value
+100,Type,Human
+100,Hair,Blue Bob
+100,Neck,Chill Headphones
+100,Clothing,Stitched Samurai Armor
+100,Eyes,Glowing
+100,Mouth,Lipstick
+100,Background,Off White B

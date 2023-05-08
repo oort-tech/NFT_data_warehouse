@@ -1,0 +1,26 @@
+token_id,trait_type,value
+1,Speed,2x
+1,Shift,IR
+1,Checks,1
+1,Day,1
+token_id,trait_type,value
+100,Color Band,Twenty
+100,Gradient,Linear
+100,Speed,1x
+100,Shift,UV
+100,Checks,80
+100,Day,1
+token_id,trait_type,value
+1000,Color Band,Forty
+1000,Gradient,None
+1000,Speed,2x
+1000,Shift,UV
+1000,Checks,80
+1000,Day,1
+token_id,trait_type,value
+10000,Color Band,Sixty
+10000,Gradient,None
+10000,Speed,2x
+10000,Shift,IR
+10000,Checks,20
+10000,Day,1

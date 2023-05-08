@@ -1,0 +1,51 @@
+token_id,trait_type,value
+1,Artefact,T-Shirt
+1,Collection,Genesis
+token_id,trait_type,value
+10,Artefact,Pants
+10,Collection,Human
+token_id,trait_type,value
+11,Artefact,Socks
+11,Collection,Human
+token_id,trait_type,value
+12,Artefact,RTFKT x Nike Air Force 1
+12,Collection,Human
+token_id,trait_type,value
+13,Artefact,T-Shirt
+13,Collection,Robot
+token_id,trait_type,value
+14,Artefact,LS T-Shirt
+14,Collection,Robot
+token_id,trait_type,value
+15,Artefact,Hoodie
+15,Collection,Robot
+token_id,trait_type,value
+16,Artefact,Cap
+16,Collection,Robot
+token_id,trait_type,value
+17,Artefact,Socks
+17,Collection,Robot
+token_id,trait_type,value
+18,Artefact,Pants
+18,Collection,Robot
+token_id,trait_type,value
+19,Artefact,Vest
+19,Collection,Robot
+token_id,trait_type,value
+2,Artefact,Hoodie
+2,Collection,Genesis
+token_id,trait_type,value
+20,Artefact,RTFKT x Nike Air Force 1
+20,Collection,Robot
+token_id,trait_type,value
+21,Artefact,T-Shirt
+21,Collection,Demon
+token_id,trait_type,value
+22,Artefact,LS T-Shirt
+22,Collection,Demon
+token_id,trait_type,value
+23,Artefact,Hoodie
+23,Collection,Demon
+token_id,trait_type,value
+24,Artefact,Cap
+24,Collection,Demon
