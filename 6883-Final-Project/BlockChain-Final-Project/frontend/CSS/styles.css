@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    color:aliceblue;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url('WechatIMG6.jpeg');
+    background-size:cover;
+    /* background-color: rgba(255,255,255,0.1); */
+    /* z-index: -1; */
+}
+
+.background-whole{
+    width: 100%;
+    height: 100%;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+}
+
+h3 {
+    font-size: 30px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+}
+
+label{
+    margin-right: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.AccountInput{
+    margin-top: 100px;
+    margin-bottom: 40px;
+
+}
+
+input {
+    /* display: flex; */
+    margin: 5px 0;
+    width: 200px;
+    height: 30px;
+}
+
+label{
+    margin-right: 80px;
+}
+
+button {
+    margin-top: 100px;
+    padding: 15px 30px;
+    width: 150px;
+    font-size: 20px;
+
+}
+
+.create{
+    background-color: orange;
+    color:aliceblue;
+}
+
+.sell{
+    background-color: olivedrab;
+    color:aliceblue;
+}
+
+.purchase{
+    background-color: purple;
+    color:aliceblue;
+
+}
+
+.remove{
+    background-color: gray;
+    color:aliceblue;
+
+}
+
+
+span{
+    margin: 20px 40px;
+}
+
+

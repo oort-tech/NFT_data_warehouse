@@ -1,0 +1,256 @@
+body {
+    font-family: Arial, sans-serif;
+    color:aliceblue;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url('WechatIMG6.jpeg');
+    background-size:cover;
+    /* background-color: rgba(255,255,255,0.1); */
+    /* z-index: -1; */
+}
+
+.background-whole{
+    width: 100%;
+    height: 100%;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+}
+
+h3 {
+    font-size: 30px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+}
+
+label{
+    margin-right: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.AccountInput{
+    margin-top: 100px;
+    margin-bottom: 40px;
+
+}
+
+input {
+    /* display: flex; */
+    margin: 5px 0;
+    width: 200px;
+    height: 30px;
+}
+
+label{
+    margin-right: 80px;
+}
+
+button {
+    margin-top: 100px;
+    padding: 15px 30px;
+    width: 150px;
+    font-size: 20px;
+
+}
+
+.verify{
+    /* width: 200px; */
+    padding: 7px 0px;
+    margin: 10px 50px;
+    text-align: center;
+    background-color: pink;
+    color:aliceblue;
+}
+
+.create{
+    background-color: orange;
+    color:aliceblue;
+}
+
+.transfer{
+    background-color: plum;
+    color:aliceblue;
+}
+
+.sell{
+    background-color: olivedrab;
+    color:aliceblue;
+}
+
+.purchase{
+    background-color: purple;
+    color:aliceblue;
+
+}
+
+.remove{
+    background-color: gray;
+    color:aliceblue;
+
+}
+
+
+span{
+    margin: 20px 40px;
+}
+
+
+/* create html */
+
+
+.CreateNFT{
+    text-align: center;
+}
+
+.creatediv {
+    display: flex;
+    align-items: center;
+    margin-left: 550px;
+    margin-top: 60px;
+}
+
+.creatediv label {
+    display: flex;
+    align-items: center;
+    margin-right: 100px;
+    text-align: left;
+}
+
+.nftid{
+    margin-left: 88px;
+}
+
+
+.nftname{
+    margin-left: 55px;
+}
+
+.createpagecreate{
+    /* width: 200px; */
+    padding: 7px 0px;
+    margin-top: 80px;
+    text-align: center;
+    background-color: orange;
+    color:aliceblue;
+}
+
+.backtohomepage{
+    display: flex;
+    align-items: left;
+    margin-top: 50px;
+    margin-left: 10px;
+    text-align: center;
+    padding-left: 35px;
+    width: 150px;
+    height: 50px;
+    background-color: gray;
+    color:aliceblue;
+}
+
+
+
+/* Transfer part */
+
+.transferpagetransfer{
+    padding: 7px 0px;
+    margin-top: 120px;
+    text-align: center;
+    background-color: plum;
+    color:aliceblue;
+}
+
+.receiverAddress{
+    margin-left: 15px;
+}
+
+.transfernftid{
+    margin-left: 120px;
+}
+
+.transferbacktohomepage{
+    display: flex;
+    align-items: left;
+    margin-top: 130px;
+    margin-left: 10px;
+    text-align: center;
+    width: 150px;
+    height: 50px;
+    background-color: gray;
+    color:aliceblue;
+    padding-left: 35px;
+}
+
+
+
+/* Sell part */
+
+
+.sellnftid{
+    margin-left: 116px;
+}
+
+.sellPrice{
+    margin-left: 60px;
+}
+
+.sellpagesell{
+    padding: 7px 0px;
+    margin-top: 120px;
+    text-align: center;
+    background-color: olivedrab;
+    color:aliceblue;
+}
+
+
+/* Purchase part */
+
+.purchasepagepurchase{
+    padding: 7px 0px;
+    margin-top: 120px;
+    text-align: center;
+    background-color: purple;
+    color:aliceblue;
+}
+
+
+/* Remove part */
+.removediv{
+    display: flex;
+    align-items: center;
+    margin-left: 550px;
+    margin-top: 170px;
+}
+
+
+.removepageremove{
+    padding: 7px 0px;
+    margin-top: 150px;
+    text-align: center;
+    background-color: gray;
+    color:aliceblue;
+
+}
+
+.removebacktohomepage{
+    display: flex;
+    align-items: left;
+    margin-top: 120px;
+    margin-left: 10px;
+    text-align: center;
+    width: 150px;
+    height: 50px;
+    background-color: gray;
+    color:aliceblue;
+    padding-left: 35px;
+}

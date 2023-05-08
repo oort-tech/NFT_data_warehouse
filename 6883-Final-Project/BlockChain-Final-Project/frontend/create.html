@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create NFT</title>
+    <link rel = "stylesheet" href = "css/styles.css"">
+    <script src = "script.js"></script>
+</head>
+<body>
+    <h1> Create NFT </h1>
+
+    <form action="/submit" method = "post">
+        <div class = "CreateNFT">
+            <div class = "creatediv">
+                <label>NFT ID</label>
+                <input type="text" class = "nftid">
+            </div>
+            <br>
+            <div class = "creatediv">
+                <label>NFT Name</label>
+                <input type="text" class = "nftname"> 
+            </div>
+            <br>
+            <div class = "creatediv">
+                <label>NFT Description</label>
+                <input type="text">
+            </div>
+            <br>
+            <button class = "createpagecreate" onclick="popinvalidNFTid()" name = "create">Create</button>
+            <br>
+            <button type = "submit" class = "backtohomepage" name = "goback">Go back</button>
+        </div>
+    </form>
+</body>
