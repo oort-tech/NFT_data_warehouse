@@ -1,5 +1,5 @@
-# E6883 OpenSea_graphql
-* The project for course ELEN 6883 Blockchain
+# E6883 Project Topic 2: OpenSea_graphql 
+The project for course ELEN 6883 Blockchain
 
 ## Team Member
 * Qingcheng Yu (qy2281)
