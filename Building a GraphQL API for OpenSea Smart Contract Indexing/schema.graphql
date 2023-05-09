@@ -1,0 +1,26 @@
+type NFT {
+  id: ID!
+  name: String
+  owner: String
+  contractAddress: String
+  metadata: String
+  getSalesHistory: [TransferEvent]
+  getTransactions: [TransferEvent]
+  latestSalePrice: Float 
+}
+
+
+type TransferEvent {
+  id: ID!
+  from: String
+  to: String
+  transactionHash: String
+  timestamp: String
+}
+
+type Query {
+  getNFT(contractAddress: String!, tokenId: ID!): NFT
+  topNFTsByLatestSalePrice(contractAddress: String!, limit: Int!): [NFT]
+}
+
+
