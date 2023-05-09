@@ -198,28 +198,6 @@ export class OrdersMatched__Params {
   }
 }
 
-export class NonceIncremented extends ethereum.Event {
-  get params(): NonceIncremented__Params {
-    return new NonceIncremented__Params(this);
-  }
-}
-
-export class NonceIncremented__Params {
-  _event: NonceIncremented;
-
-  constructor(event: NonceIncremented) {
-    this._event = event;
-  }
-
-  get maker(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get newNonce(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
 export class OwnershipRenounced extends ethereum.Event {
   get params(): OwnershipRenounced__Params {
     return new OwnershipRenounced__Params(this);
@@ -411,22 +389,41 @@ export class OpenSea extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  DOMAIN_SEPARATOR(): Bytes {
+  testCopyAddress(addr: Address): Bytes {
     let result = super.call(
-      "DOMAIN_SEPARATOR",
-      "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      "testCopyAddress",
+      "testCopyAddress(address):(bytes)",
+      [ethereum.Value.fromAddress(addr)]
     );
 
     return result[0].toBytes();
   }
 
-  try_DOMAIN_SEPARATOR(): ethereum.CallResult<Bytes> {
+  try_testCopyAddress(addr: Address): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "DOMAIN_SEPARATOR",
-      "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      "testCopyAddress",
+      "testCopyAddress(address):(bytes)",
+      [ethereum.Value.fromAddress(addr)]
     );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  testCopy(arrToCopy: Bytes): Bytes {
+    let result = super.call("testCopy", "testCopy(bytes):(bytes)", [
+      ethereum.Value.fromBytes(arrToCopy)
+    ]);
+
+    return result[0].toBytes();
+  }
+
+  try_testCopy(arrToCopy: Bytes): ethereum.CallResult<Bytes> {
+    let result = super.tryCall("testCopy", "testCopy(bytes):(bytes)", [
+      ethereum.Value.fromBytes(arrToCopy)
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -931,25 +928,6 @@ export class OpenSea extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  nonces(param0: Address): BigInt {
-    let result = super.call("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_nonces(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   cancelledOrFinalized(param0: Bytes): boolean {
     let result = super.call(
       "cancelledOrFinalized",
@@ -1156,21 +1134,21 @@ export class OpenSea extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  approvedOrders(hash: Bytes): boolean {
+  approvedOrders(param0: Bytes): boolean {
     let result = super.call(
       "approvedOrders",
       "approvedOrders(bytes32):(bool)",
-      [ethereum.Value.fromFixedBytes(hash)]
+      [ethereum.Value.fromFixedBytes(param0)]
     );
 
     return result[0].toBoolean();
   }
 
-  try_approvedOrders(hash: Bytes): ethereum.CallResult<boolean> {
+  try_approvedOrders(param0: Bytes): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "approvedOrders",
       "approvedOrders(bytes32):(bool)",
-      [ethereum.Value.fromFixedBytes(hash)]
+      [ethereum.Value.fromFixedBytes(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1266,32 +1244,6 @@ export class ChangeProtocolFeeRecipientCall__Outputs {
   _call: ChangeProtocolFeeRecipientCall;
 
   constructor(call: ChangeProtocolFeeRecipientCall) {
-    this._call = call;
-  }
-}
-
-export class IncrementNonceCall extends ethereum.Call {
-  get inputs(): IncrementNonceCall__Inputs {
-    return new IncrementNonceCall__Inputs(this);
-  }
-
-  get outputs(): IncrementNonceCall__Outputs {
-    return new IncrementNonceCall__Outputs(this);
-  }
-}
-
-export class IncrementNonceCall__Inputs {
-  _call: IncrementNonceCall;
-
-  constructor(call: IncrementNonceCall) {
-    this._call = call;
-  }
-}
-
-export class IncrementNonceCall__Outputs {
-  _call: IncrementNonceCall;
-
-  constructor(call: IncrementNonceCall) {
     this._call = call;
   }
 }
@@ -1558,84 +1510,6 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class CancelOrderWithNonce_Call extends ethereum.Call {
-  get inputs(): CancelOrderWithNonce_Call__Inputs {
-    return new CancelOrderWithNonce_Call__Inputs(this);
-  }
-
-  get outputs(): CancelOrderWithNonce_Call__Outputs {
-    return new CancelOrderWithNonce_Call__Outputs(this);
-  }
-}
-
-export class CancelOrderWithNonce_Call__Inputs {
-  _call: CancelOrderWithNonce_Call;
-
-  constructor(call: CancelOrderWithNonce_Call) {
-    this._call = call;
-  }
-
-  get addrs(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
-  }
-
-  get uints(): Array<BigInt> {
-    return this._call.inputValues[1].value.toBigIntArray();
-  }
-
-  get feeMethod(): i32 {
-    return this._call.inputValues[2].value.toI32();
-  }
-
-  get side(): i32 {
-    return this._call.inputValues[3].value.toI32();
-  }
-
-  get saleKind(): i32 {
-    return this._call.inputValues[4].value.toI32();
-  }
-
-  get howToCall(): i32 {
-    return this._call.inputValues[5].value.toI32();
-  }
-
-  get calldata(): Bytes {
-    return this._call.inputValues[6].value.toBytes();
-  }
-
-  get replacementPattern(): Bytes {
-    return this._call.inputValues[7].value.toBytes();
-  }
-
-  get staticExtradata(): Bytes {
-    return this._call.inputValues[8].value.toBytes();
-  }
-
-  get v(): i32 {
-    return this._call.inputValues[9].value.toI32();
-  }
-
-  get r(): Bytes {
-    return this._call.inputValues[10].value.toBytes();
-  }
-
-  get s(): Bytes {
-    return this._call.inputValues[11].value.toBytes();
-  }
-
-  get nonce(): BigInt {
-    return this._call.inputValues[12].value.toBigInt();
-  }
-}
-
-export class CancelOrderWithNonce_Call__Outputs {
-  _call: CancelOrderWithNonce_Call;
-
-  constructor(call: CancelOrderWithNonce_Call) {
     this._call = call;
   }
 }

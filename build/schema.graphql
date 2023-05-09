@@ -1,28 +1,7 @@
 # Subgraph Schema: NFT Marketplace
-# Version: 1.0.0
 
 enum Network {
-  ARBITRUM_ONE
-  ARWEAVE_MAINNET
-  AURORA
-  AVALANCHE
-  BOBA
-  BSC # aka BNB Chain
-  CELO
-  COSMOS
-  CRONOS
   MAINNET # Ethereum Mainnet
-  FANTOM
-  FUSE
-  HARMONY
-  JUNO
-  MOONBEAM
-  MOONRIVER
-  NEAR_MAINNET
-  OPTIMISM
-  OSMOSIS
-  MATIC # aka Polygon
-  XDAI # aka Gnosis Chain
 }
 
 enum NftStandard {
@@ -32,86 +11,72 @@ enum NftStandard {
 }
 
 enum SaleStrategy {
-  " Strategy that executes an order at a fixed price that can be taken either by a bid or an ask. "
   STANDARD_SALE
 
-  " Strategy that executes an order at a fixed price that can be matched by any tokenId for the collection. "
   ANY_ITEM_FROM_COLLECTION
 
-  " Strategy that executes an order at a fixed price that can be matched by any tokenId in a set of tokenIds. "
   ANY_ITEM_FROM_SET
 
-  " Strategy to launch a Dutch Auction for a token where the price decreases linearly until a specified timestamp and end price defined by the seller. "
   DUTCH_AUCTION
 
-  " Strategy to set up an order that can only be executed by a specific address. "
   PRIVATE_SALE
 }
 
 type Marketplace @entity {
-  " Smart contract address of the protocol's main contract (Factory, Registry, etc) "
+  #Smart contract address of the protocol's main contract
   id: ID!
 
-  " Name of the NFT marketplace, for example LooksRare "
+  #Name of the NFT marketplace, in this case OpenSea
   name: String!
 
-  " Slug of the NFT marketplace, for example looksrare "
+  #Slug of the NFT marketplace
   slug: String!
 
-  " The blockchain network this subgraph is indexing on. "
+  #The blockchain network that subgraph indexes
   network: Network!
 
-  #" Version of the subgraph schema, in SemVer format (e.g. 1.0.0) "
-  #schemaVersion: String!
-
-  #" Version of the subgraph implementation, in SemVer format (e.g. 1.0.0) "
-  #subgraphVersion: String!
-
-  #" Version of the methodology used to compute metrics, loosely based on SemVer format (e.g. 1.0.0) "
-  #methodologyVersion: String!
-
-  " Number of collections listed on the marketplace. "
+  #Number of collections listed on the marketplace
   collectionCount: Int!
 
-  " Trade count of the all collections on the marketplace. "
+  #Trade count of the all collections on the marketplace
   tradeCount: Int!
 
-  " Cumulative trade volume (in ETH) "
+  #Cumulative trade volume (in ETH)
   cumulativeTradeVolumeETH: BigDecimal!
 
-  " Revenue that goes to the marketplace protocol, aka protocol fee. "
+  #Protocol Fee
   marketplaceRevenueETH: BigDecimal!
 
-  " Revenue that goes to creator, aka royalty fee. "
+  #Royalty fee
   creatorRevenueETH: BigDecimal!
 
-  " Sum of marketplaceRevenueETH and creatorRevenueETH. "
+  #Total fee
   totalRevenueETH: BigDecimal!
 
-  " Cumulative unique traders "
+  #Cumulative unique traders
   cumulativeUniqueTraders: Int!
 }
 
 type Collection @entity {
-  " Contract address. "
+  #Contract address
   id: ID!
 
-  " Collection name, mirrored from the smart contract. Leave null if not available. "
+  #Collection name
   name: String
 
-  " Collection symbol, mirrored from the smart contract. Leave null if not available. "
+  #Collection symbol
   symbol: String
 
-  " Total supply of the collection, mirrored from the smart contract. "
+  #Total supply of the collection
   totalSupply: BigInt
 
-  " NFT Standard the collection uses. "
+  #NFT Standard of collection
   nftStandard: NftStandard!
 
-  " Royalty fee rate in percentage. E.g. 2.5% should be 2.5 "
+  #Royalty fee rate in percentage
   royaltyFee: BigDecimal!
 
-  " Cumulative trade volume (in ETH) "
+  #Cumulative trade volume (in ETH)
   cumulativeTradeVolumeETH: BigDecimal!
 
   " Revenue that goes to the marketplace protocol, aka protocol fee. "
