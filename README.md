@@ -6,12 +6,14 @@ This repo contains the code behind the subgraph deployed [here](https://api.stud
 1. `./abis/' contain the ABIs needed to interact with the smart contract [here](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581). These were extracted from Etherscan directly.
 2. `./contracts/` contain the smart contracts deployed to the mainnet. They were pulled from Etherscan [here](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581#code). These allow understanding the event types that are emitted by the smart contract better so that our subgraph can listen for them. They are not directly needed for subgraph deployment.
 3. `./opensea-marketplace-indexer/` contains the code relavent to the subgraph and event handlers.
-4. `Makefile` defines targets to run The Graph CLI commands (init, codegen, deploy) reproducibly.
+4. `./opensea-marketplace-indexer/tests` contains all the unit tests for the subgraph functionality
+5. `Makefile` defines targets to run The Graph CLI commands (init, codegen, deploy) reproducibly.
 
 ## Deploying the Subgraph
-1. Run `yarn install` to install the package dependencies. This will create a folder called `./opensea-marketplace-indexer/node_modules/` that is needed to run tests and build the graph.
-2. Run `graph codegen` in `./opensea-marketplace-indexer/` to create generated code that maps the graphQL schema to typescript objects that the event handlers can access.
-3. Run `make deploy` from the root directory of this project to get access to the new endpoint URL. Ensure to set a deployment key and change the version number in the makefile. You can create a deployment key by initializing a subgraph on The Graph Studio by following [these](https://thegraph.com/docs/en/deploying/subgraph-studio/) instructions.
+1. Navigate to `opensea-marketplace-indexer` subfolder
+2. Run `yarn install` to install the package dependencies. This will create a folder called `./opensea-marketplace-indexer/node_modules/` that is needed to run tests and build the graph.
+3. Run `graph codegen` in `./opensea-marketplace-indexer/` to create generated code that maps the graphQL schema to typescript objects that the event handlers can access.
+4. Run `make deploy` from the root directory of this project to get access to the new endpoint URL. Ensure to set a deployment key and change the version number in the makefile. You can create a deployment key by initializing a subgraph on The Graph Studio by following [these](https://thegraph.com/docs/en/deploying/subgraph-studio/) instructions.
 
 ## Event Handlers
 The Seaport smart contract emits several [events/errors](https://docs.opensea.io/reference/seaport-events-and-errors) that the subgraph can listen for:
