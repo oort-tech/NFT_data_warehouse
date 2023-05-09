@@ -1,0 +1,7 @@
+__pycache__/
+config.json
+generated/
+node_modules/
+build/
+*.wasm
+.*.json

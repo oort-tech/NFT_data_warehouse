@@ -1,0 +1,31 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: OpenSea
+    network: mainnet
+    source:
+      # Replace with the OpenSea smart contract's address
+      address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
+      # address: "0x46bB3Ba2BAB21BAf45CA181f1521D379Ed1B8b54"
+      abi: OpenSea
+      # Replace with the OpenSea smart contract's start block
+      startBlock: 5774644
+      # startBlock: 9
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: OpenSea
+          file: ./abis/OpenSeaV1.json
+        - name: ERC165
+          file: ./abis/ERC165.json
+        - name: NftMetadata
+          file: ./abis/NftMetadata.json
+      callHandlers:
+        - function: atomicMatch_(address[14],uint256[18],uint8[8],bytes,bytes,bytes,bytes,bytes,bytes,uint8[2],bytes32[5])
+          handler: handleAtomicMatch
+      file: ./src/mappings.ts

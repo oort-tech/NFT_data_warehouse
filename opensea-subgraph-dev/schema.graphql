@@ -1,0 +1,124 @@
+enum NftStandard {
+  ERC721
+  ERC1155
+  UNKNOWN
+}
+
+enum SaleKind {
+  " Sell-side order, i.e. a buyer directly purchases an sell order. "
+  DIRECT_PURCHASE
+
+  " Buy-side order, i.e. a buyer place a bid at the auction, where the sale prices decreases overt time "
+  AUCTION
+}
+
+type Collection @entity {
+  " Contract address. "
+  id: ID!
+
+  " Collection name. Leave null if not available. "
+  name: String
+
+  " Collection symbol. Leave null if not available. "
+  symbol: String
+
+  " Total supply of the collection. "
+  totalSupply: BigInt
+
+  " NFT Standard the collection uses. ERC721 or ERC1155. UNKNOWN if not found. "
+  nftStandard: NftStandard!
+
+  " Royalty fee rate in percentage. E.g. 2.5% should be 2.5 (that of OpenSea). Similar to Messari. "
+  royaltyFee: BigDecimal!
+
+  " Cumulative trade volume (in ETH) "
+  cumulativeTradeVolumeETH: BigDecimal!
+
+  " Revenue that goes to the marketplace protocol. Similar to Messari."
+  marketplaceRevenueETH: BigDecimal!
+
+  " Revenue that goes to creator, aka royalty fee. Similar to Messari."
+  creatorRevenueETH: BigDecimal!
+
+  " Sum of marketplaceRevenue and creatorRevenue. Similar to Messari."
+  totalRevenueETH: BigDecimal!
+
+  " Trade count of the collection on the marketplace. "
+  tradeCount: Int!
+
+  " Discovered assets of the collection "
+  assets: [Asset!]! @derivedFrom(field: "collection")
+}
+
+type Asset @entity {
+  " { collection contract address } - { token id } "
+  id: ID!
+  
+  " Id of the token in the collection "
+  tokenId: BigInt!
+
+  " Token URL for this asset. Leave as null if unfound."
+  tokenURI: String
+
+  " Trade count of the asset on the marketplace. "
+  tradeCount: Int!
+
+  " Collection of where this id belongs to"
+  collection: Collection!
+
+  " Current owner (depending on indexing progress) of this NFT asset. "
+  owner: User!
+
+  " All trades that have been involving this asset. "
+  trades: [Trade!]! @derivedFrom(field: "asset")
+}
+
+type User @entity {
+  " Wallet address. "
+  id: ID!
+
+  " Trades it has bought "
+  purchases: [Trade!]! @derivedFrom(field: "buyer")
+
+  " Trades it has sold "
+  sales: [Trade!]! @derivedFrom(field: "seller")
+
+  " Discovered assets owned by this user. "
+  assets: [Asset!]! @derivedFrom(field: "owner")
+}
+
+" Trades is a completed order. When `atomicMatch_()` succeeds, the order is finalized."
+type Trade @entity {
+  " { Transaction hash }-{ Log index }-{ (optional) ID within bundle } "
+  id: ID!
+
+  " Event transaction hash. "
+  transactionHash: String!
+
+  " Block timestamp where the trade is executed. "
+  timestamp: BigInt!
+
+  " Block number where the trade is executed. "
+  blockNumber: BigInt!
+
+  " Whether the trade is in a bundle. "
+  isBundle: Boolean!
+
+  " The amount of token to transfer. It is set at 1 except for ERC1155 batch. "
+  amount: BigInt!
+
+  " Price (in ETH). If only 1 tokenId is involved, then the price is determined by the token only. If the trade is incurred by a batch purchasing (available in x2y2), then the price is the average price in the batch. "
+  priceETH: BigDecimal!
+
+  " Stretegy that the trade is executed. "
+  saleKind: SaleKind!
+
+  " Buyer account address "
+  buyer: User!
+
+  " Seller account address "
+  seller: User!
+
+  " Asset Involved. "
+  asset: Asset!
+}
