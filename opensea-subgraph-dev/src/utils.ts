@@ -33,22 +33,6 @@ import {
   TRANSFER_FROM_SELECTOR,
 } from "./constants";
 
-export class DecodedCallDataResult {
-  constructor(
-      public readonly functionSelector: string,
-      public readonly from: Address,
-      public readonly to: Address,
-      public readonly token: Address,
-      public readonly tokenId: BigInt,
-      public readonly amount: BigInt) {}
-}
-
-export class DecodedAtomicCallDataResult {
-  constructor(
-      public readonly targets: Address[],
-      public readonly callDatas: Bytes[]) {}
-}
-
 /**
  * Get first 4 bytes of the calldata (function selector/method ID)
  */
@@ -89,6 +73,7 @@ export function validateCallDataFunctionSelector(callData: Bytes): boolean {
 
 /**
  * Creates a list of calldatas which can be decoded in decodeSingleNftData
+ * https://github.com/ProjectWyvern/wyvern-ethereum/blob/master/contracts/WyvernAtomicizer.sol#L21
  */
 export function splitAtomicizeCallDatas(
     callDatas: Bytes,
@@ -120,13 +105,8 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
 
   // Calculate sell price
   const sellPrice = calculateFinalPrice(
-      sellSide,
-      sellSaleKind,
-      sellBasePrice,
-      sellExtra,
-      sellListingTime,
-      sellExpirationTime,
-      call.block.timestamp);
+    sellSide, sellSaleKind, sellBasePrice, sellExtra,
+    sellListingTime, sellExpirationTime, call.block.timestamp);
 
   const buySide = call.inputs.feeMethodsSidesKindsHowToCalls[1];
   const buySaleKind = call.inputs.feeMethodsSidesKindsHowToCalls[2];
@@ -137,12 +117,9 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
 
   // Calculate buy price
   const buyPrice = calculateFinalPrice(
-      buySide,
-      buySaleKind,
-      buyBasePrice,
-      buyExtra,
-      buyListingTime,
-      buyExpirationTime,
+    buySide, buySaleKind, buyBasePrice, buyExtra, buyListingTime, buyExpirationTime,
+      // block.timestamp is basically order execution time, i.e. `now` / current timestamp when computing
+      // auction match prices.
       call.block.timestamp);
 
   // If is sell-side order, use the sell price (i.e. use the user's listing price),
@@ -205,14 +182,28 @@ export function guardedArrayReplace(
   return Bytes.fromHexString(bigIntArray.toHexString());
 }
 
+export class DecodedCallDataResult {
+  constructor(
+    public readonly functionSelector: string,
+    public readonly from: Address,
+    public readonly to: Address,
+    public readonly token: Address,
+    public readonly tokenId: BigInt,
+    public readonly amount: BigInt) { }
+}
+
+export class DecodedAtomicCallDataResult {
+  constructor(
+    public readonly targets: Address[],
+    public readonly callDatas: Bytes[]) { }
+}
+
 /**
  * Decode calldata of transferFrom/safeTransferFrom calls using function selector
  * 0x23b872dd transferFrom(address,address,uint256)
  * 0x42842e0e safeTransferFrom(address,address,uint256)
  */
-export function decodeERC721CallData(
-    target: Address,
-    callData: Bytes): DecodedCallDataResult {
+export function decodeERC721CallData(target: Address, callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
   const data = Bytes.fromUint8Array(callData.subarray(4));
 
@@ -415,13 +406,13 @@ export function decodeSingleNftCallData(target: Address, callData: Bytes): Decod
  * Decode a bundled NFT tranfer from calldata. Ignore any transfer if the functionSelector is not recognized.
  */
 export function decodeBundleNftCallData(callDatas: Bytes): DecodedCallDataResult[] {
-  const decodedTransferResults: DecodedCallDataResult[] = [];
-  const decodedAtomicizeResult = decodeAtomicizeCall(callDatas);
-  for (let i = 0; i < decodedAtomicizeResult.targets.length; i++) {
-    const target = decodedAtomicizeResult.targets[i];
-    const calldata = decodedAtomicizeResult.callDatas[i];
-    const singleTransferResult = decodeSingleNftCallData(target, calldata)
-    if (singleTransferResult) decodedTransferResults.push(singleTransferResult);
+  const decodedCallDatas: DecodedCallDataResult[] = [];
+  const decodedAtomicizeCallData = decodeAtomicizeCall(callDatas);
+  for (let i = 0; i < decodedAtomicizeCallData.targets.length; i++) {
+    const target = decodedAtomicizeCallData.targets[i];
+    const calldata = decodedAtomicizeCallData.callDatas[i];
+    const singleCallData = decodeSingleNftCallData(target, calldata)
+    if (singleCallData) decodedCallDatas.push(singleCallData);
   }
-  return decodedTransferResults;
+  return decodedCallDatas;
 }
