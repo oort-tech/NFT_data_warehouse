@@ -58,7 +58,8 @@ rssMetadata: signature verification related
 
 ## Unit / Integration Testing
 
-TODO: write a bunch of unit tests to test our function handling.
+See `opensea-subgraph-dev/tests`.
+
 ## Smoke Testing
 
 For the intergration test, we want to simulate several (almost) real NFT trading scenarios on our test blockchain network, and check if our indexer can work seamlessly with those.
