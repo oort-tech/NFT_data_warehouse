@@ -1,0 +1,134 @@
+# Subgraph Schema: NFT Marketplace
+
+enum Network {
+  MAINNET # Ethereum Mainnet
+}
+
+enum NftStandard {
+  ERC721
+  ERC1155
+  UNKNOWN
+}
+
+enum SaleStrategy {
+  STANDARD_SALE
+
+  ANY_ITEM_FROM_COLLECTION
+
+  ANY_ITEM_FROM_SET
+
+  DUTCH_AUCTION
+
+  PRIVATE_SALE
+}
+
+type Marketplace @entity {
+  #Smart contract address of the protocol's main contract
+  id: ID!
+  #Name of the NFT marketplace, in this case OpenSea
+  name: String!
+  #Slug of the NFT marketplace
+  slug: String!
+  #The blockchain network that subgraph indexes
+  network: Network!
+  #Number of collections listed on the marketplace
+  collectionCount: Int!
+  #Trade count of the all collections on the marketplace
+  tradeCount: Int!
+  #Cumulative trade volume (in ETH)
+  cumulativeTradeVolumeETH: BigDecimal!
+  #Protocol Fee
+  marketplaceRevenueETH: BigDecimal!
+  #Royalty fee
+  creatorRevenueETH: BigDecimal!
+  #Total fee
+  totalRevenueETH: BigDecimal!
+  #Cumulative unique traders
+  cumulativeUniqueTraders: Int!
+}
+
+type Collection @entity {
+  #Contract address
+  id: ID!
+  #Collection name
+  name: String
+  #Collection symbol
+  symbol: String
+  #Total supply of the collection
+  totalSupply: BigInt
+  #NFT Standard of collection
+  nftStandard: NftStandard!
+  #Royalty fee rate in percentage
+  royaltyFee: BigDecimal!
+  #Trade count
+  tradeCount: Int!
+  #Buyer count
+  buyerCount: Int!
+  #Seller count
+  sellerCount: Int!
+  #Trades of the collection
+  trades: [Trade!]! @derivedFrom(field: "collection")
+  #Cumulative trade volume (in ETH)
+  cumulativeTradeVolumeETH: BigDecimal!
+  " Revenue that goes to the marketplace protocol, aka protocol fee. "
+  marketplaceRevenueETH: BigDecimal!
+  " Revenue that goes to creator, aka royalty fee. "
+  creatorRevenueETH: BigDecimal!
+  " Sum of marketplaceRevenue and creatorRevenue. "
+  totalRevenueETH: BigDecimal!
+}
+
+" Trades exist such as a combination of taker/order and bid/ask. "
+type Trade @entity {
+  id: ID!
+  transactionHash: String!
+  logIndex: Int
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  isBundle: Boolean!
+  collection: Collection!
+  tokenId: BigInt!
+  amount: BigInt!
+  priceETH: BigDecimal!
+  strategy: SaleStrategy!
+  buyer: String!
+  seller: String!
+}
+
+type MarketplaceDailySnapshot @entity {
+  id: ID!
+  marketplace: Marketplace!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  collectionCount: Int!
+  cumulativeTradeVolumeETH: BigDecimal!
+  marketplaceRevenueETH: BigDecimal!
+  creatorRevenueETH: BigDecimal!
+  totalRevenueETH: BigDecimal!
+  tradeCount: Int!
+  cumulativeUniqueTraders: Int!
+  dailyActiveTraders: Int!
+  dailyTradedCollectionCount: Int!
+  dailyTradedItemCount: Int!
+}
+
+type CollectionDailySnapshot @entity {
+  id: ID!
+  collection: Collection!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  royaltyFee: BigDecimal!
+  dailyMinSalePrice: BigDecimal!
+  dailyMaxSalePrice: BigDecimal!
+  cumulativeTradeVolumeETH: BigDecimal!
+  dailyTradeVolumeETH: BigDecimal!
+  marketplaceRevenueETH: BigDecimal!
+  creatorRevenueETH: BigDecimal!
+  totalRevenueETH: BigDecimal!
+  tradeCount: Int!
+  dailyTradedItemCount: Int!
+}
+
+type _Item @entity {
+  id: ID!
+}
