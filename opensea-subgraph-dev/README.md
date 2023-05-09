@@ -1,6 +1,6 @@
 There are some sample GraphQL queries we can implement. 
 Here, we show an example with GetAllAssetsFromUser () string.
-This funciton will retrieve all the assets that belong to a user, taking a wallet address as an argument and using it to recover thea assets associated to that address. The function will give back a bunch of objects containing information such as the asset ID, token ID, token URI, and collection details.
+This funciton will retrieve all the assets that belong to a user, taking a wallet address as an argument and using it to recover the assets associated to that address. The function will give back a bunch of objects containing information such as the asset ID, token ID, token URI, and collection details.
 
 We first get all assets owned by a specific user:
 
