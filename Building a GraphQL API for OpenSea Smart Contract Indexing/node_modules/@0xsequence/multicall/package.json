@@ -1,0 +1,34 @@
+{
+  "name": "@0xsequence/multicall",
+  "version": "0.39.6",
+  "description": "multicall sub-package for Sequence",
+  "repository": "https://github.com/0xsequence/sequence.js/tree/master/packages/multicall",
+  "source": "src/index.ts",
+  "main": "dist/0xsequence-multicall.cjs.js",
+  "module": "dist/0xsequence-multicall.esm.js",
+  "author": "Horizon Blockchain Games",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "TS_NODE_PROJECT=../../tsconfig.test.json mocha -r ts-node/register --timeout 60000 tests/**/*.spec.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@0xsequence/abi": "^0.39.6",
+    "@0xsequence/network": "^0.39.6",
+    "@0xsequence/utils": "^0.39.6",
+    "@ethersproject/providers": "^5.5.1",
+    "ethers": "^5.5.2"
+  },
+  "devDependencies": {
+    "@0xsequence/wallet-contracts": "1.9.6",
+    "@types/web3-provider-engine": "^14.0.1",
+    "eth-json-rpc-middleware": "^8.0.0",
+    "json-rpc-engine": "^6.1.0",
+    "web3": "^1.7.0",
+    "web3-provider-engine": "^16.0.3"
+  },
+  "files": [
+    "src",
+    "dist"
+  ]
+}

@@ -1,0 +1,14 @@
+runtime: nodejs14
+
+instance_class: F1
+
+automatic_scaling:
+  max_instances: 5
+  target_cpu_utilization: 0.75
+
+env_variables:
+  INFURA_PROJECT_ID: "d48da051f5424635a1ad00ebbf9d2455"
+
+handlers:
+  - url: /.*
+    script: auto

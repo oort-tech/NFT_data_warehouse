@@ -1,0 +1,24 @@
+{
+  "name": "6883_graphql_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@0x/utils": "^7.0.0",
+    "apollo-server": "^3.12.0",
+    "apollo-server-express": "^3.12.0",
+    "axios": "^1.4.0",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "graphql": "^16.6.0",
+    "ipfs-http-client": "^60.0.0",
+    "opensea-js": "^5.0.0",
+    "web3": "^1.9.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
