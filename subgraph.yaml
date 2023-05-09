@@ -31,6 +31,8 @@ dataSources:
       abis:
         - name: OpenSea
           file: ./abis/OpenSea.json
+        - name: ERC721
+          file: ./abis/ERC721.json
       eventHandlers:
         - event: OrderApprovedPartOne(indexed bytes32,address,indexed address,address,uint256,uint256,uint256,uint256,indexed address,uint8,uint8,uint8,address)
           handler: handleOrderApprovedPartOne
