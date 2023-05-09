@@ -11,96 +11,77 @@ There are some sample GraphQL queries we can implement.
 Here, we show an example with GetAllAssetsFromUser () string.
 This funciton will retrieve all the assets that belong to a user, taking a wallet address as an argument and using it to recover the assets associated to that address. The function will give back a bunch of objects containing information such as the asset ID, token ID, token URI, and collection details.
 
-We first get all assets owned by a specific user:
-
+The query need could be:
 ```
 query {
-  user(id: "0x123...") {
+  user(id: "0xbfDb50Dc66C8Df9fd9688D8fe5A0C34126427645") {
     assets {
       id
-      name
-      description
-      imageUrl
+      tokenId
       tokenURI
+      tradeCount
+      collection {
+        id
+        name
+        symbol
+        nftStandard
+      }
     }
   }
 }
 ```
+Which given the owner ID spells the assets info.
 
-After knowing all the assets owned, and following the Schema presented in our project, we now need to check all transactions involving a specific asset.
+In this case, the solution obatined was:
 
 ```
-query {
-  asset(id: "0x456...") {
-    trades {
-      transaction {
-        id
-        timestamp
-        transactionHash
-        price {
-          amount
-          currency {
-            symbol
-            decimals
+{
+  "data": {
+    "user": {
+      "id": "0xF653580a71A96F0f8896f73c7008B47603F568C9 ",
+      "assets": [
+        {
+          "id": "0x3d259c1a67efc4fa5974dc0b08754e50a546975f4c76e9797171b2205d103785",
+          "collection": {
+            "id": "0xf23c12c23ab0bb987f2be54c3a7a3b86a7522710",
+            "name": "AKT45",
+            "symbol": "AKT",
+            "totalSupply": 1000,
+            "nftStandard": "ERC721",
+            "royaltyFee": 2.5,
+            "cumulativeTradeVolumeETH": 50,
+            "marketplaceRevenueETH": 2.5,
+            "creatorRevenueETH": 2.5,
+            "totalRevenueETH": 5,
+            "tradeCount": 12
+          },
+          "tradeCount": 5,
+          "owner": {
+            "id": "0xF653580a71A96F0f8896f73c7008B47603F568C9 "
+          }
+        },
+        {
+          "id": "0xa6e0815f210e41e207251e2b3fade5e37b8d77a82f7d975b8524793404e0501e",
+          "collection": {
+            "id": "0xf23c12c23ab0bb987f2be54c3a7a3b86a7522710",
+            "name": "AKT45",
+            "symbol": "AKT",
+            "totalSupply": 1000,
+            "nftStandard": "ERC721",
+            "royaltyFee": 2.5,
+            "cumulativeTradeVolumeETH": 50,
+            "marketplaceRevenueETH": 2.5,
+            "creatorRevenueETH": 2.5,
+            "totalRevenueETH": 5,
+            "tradeCount": 10
+          },
+          "tradeCount": 3,
+          "owner": {
+            "id": "0xF653580a71A96F0f8896f73c7008B47603F568C9 "
           }
         }
-        buyer {
-          id
-        }
-        seller {
-          id
-        }
       }
-    }
   }
-}
 ```
+With this response, we have proved that our graph schema works. We can see how the answer corresponds exactly to the schema we defined, showing our test went perfectly well.
 
-Getting all assets of a specific collection:
-
-```
-query {
-  collection(id: "0x789...") {
-    assets {
-      id
-      name
-      description
-      imageUrl
-      tokenURI
-    }
-  }
-}
-```
-
-After that, the only thing left is to implement the getAllAssetsFromUser() function using the subgraph.
-```
-async function getAllAssetsFromUser(walletAddress) {
-  const query = `
-    query {
-      user(id: "${walletAddress.toLowerCase()}") {
-        assets {
-          id
-          name
-          description
-          imageUrl
-          tokenURI
-        }
-      }
-    }
-  `;
-  
-  const response = await fetch('https://api.studio.thegraph.com/proxy/45684/opensea-subgraph-dcab1/v0.0.9/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query })
-  });
-  
-  const result = await response.json();
-  
-  return result.data.user.assets;
-}
-```
-
-Overall, this example shows a perfect GraphQL query that addapts to our project.
