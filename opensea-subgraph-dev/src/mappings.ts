@@ -1,6 +1,7 @@
 import {
   BigDecimal,
-  BigInt
+  BigInt,
+  log
 } from "@graphprotocol/graph-ts";
 
 import {AtomicMatch_Call} from "../generated/OpenSea/OpenSea";
@@ -39,6 +40,7 @@ function handleSingleTrade(callInfo: AtomicMatch_Call): void {
 
   let target = callInfo.inputs.addrs[11];
   let transferResult = decodeSingleNftCallData(target, mergedCallData);
+  
   if (!transferResult) return;
 
   let collectionAddr = transferResult.token.toHexString();
