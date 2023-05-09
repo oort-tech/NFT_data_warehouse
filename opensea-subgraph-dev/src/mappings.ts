@@ -15,9 +15,9 @@ import {
   WYVERN_ATOMICIZER_ADDRESS,
 } from "./constants";
 import {
-  calculateTradePriceETH,
-  decodeBundleNftTransferResults,
-  decodeSingleTransferResult,
+  calculateTradePriceInETH,
+  decodeBundleNftCallData,
+  decodeSingleNftCallData,
   getOrCreateAsset,
   getOrCreateCollection,
   getOrCreateUser,
@@ -30,15 +30,15 @@ import {
 // Ref: https://github.com/graphprotocol/graph-node/pull/4149
 export function handleAtomicMatch(callInfo: AtomicMatch_Call): void {
   let target = callInfo.inputs.addrs[11];
-  let handleOrder = target.equals(WYVERN_ATOMICIZER_ADDRESS) ? handleBundleOrder : handleSingleOrder;
+  let handleOrder = target.equals(WYVERN_ATOMICIZER_ADDRESS) ? handleBundleTrade : handleSingleTrade;
   handleOrder(callInfo);
 }
 
-function handleSingleOrder(callInfo: AtomicMatch_Call): void {
+function handleSingleTrade(callInfo: AtomicMatch_Call): void {
   let mergedCallData = guardedArrayReplace(callInfo.inputs.calldataBuy, callInfo.inputs.calldataSell, callInfo.inputs.replacementPatternBuy);
 
   let target = callInfo.inputs.addrs[11];
-  let transferResult = decodeSingleTransferResult(target, mergedCallData);
+  let transferResult = decodeSingleNftCallData(target, mergedCallData);
   if (!transferResult) return;
 
   let collectionAddr = transferResult.token.toHexString();
@@ -48,7 +48,7 @@ function handleSingleOrder(callInfo: AtomicMatch_Call): void {
   let seller = transferResult.from.toHexString();
   let saleKind = getSaleKind(callInfo.inputs.feeMethodsSidesKindsHowToCalls[6]);
   let paymentToken = callInfo.inputs.addrs[13];
-  let priceETH = calculateTradePriceETH(callInfo, paymentToken);
+  let priceETH = calculateTradePriceInETH(callInfo, paymentToken);
 
   getOrCreateUser(seller);
   getOrCreateUser(buyer);
@@ -76,7 +76,7 @@ function handleSingleOrder(callInfo: AtomicMatch_Call): void {
   updateCollectionRevenueMetrics(callInfo, collectionAddr, priceETH, trade.isBundle);
 }
 
-function handleBundleOrder(callInfo: AtomicMatch_Call): void {
+function handleBundleTrade(callInfo: AtomicMatch_Call): void {
   let mergedCallData = guardedArrayReplace(callInfo.inputs.calldataBuy, callInfo.inputs.calldataSell, callInfo.inputs.replacementPatternBuy);
   // buyer is buyOrder.maker (addrs[1])
   let buyer = callInfo.inputs.addrs[1].toHexString();
@@ -84,8 +84,8 @@ function handleBundleOrder(callInfo: AtomicMatch_Call): void {
   let seller = callInfo.inputs.addrs[8].toHexString();
   let paymentToken = callInfo.inputs.addrs[13];
 
-  let bundlePriceETH = calculateTradePriceETH(callInfo, paymentToken);
-  let transferResults = decodeBundleNftTransferResults(mergedCallData);
+  let bundlePriceETH = calculateTradePriceInETH(callInfo, paymentToken);
+  let transferResults = decodeBundleNftCallData(mergedCallData);
   let numItems = BigInt.fromI32(transferResults.length).toBigDecimal();
   let avgTradePriceETH = bundlePriceETH.div(numItems);
 

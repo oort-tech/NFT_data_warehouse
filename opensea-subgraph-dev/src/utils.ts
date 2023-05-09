@@ -88,10 +88,9 @@ export function validateCallDataFunctionSelector(callData: Bytes): boolean {
 }
 
 /**
- * Split up/atomicize a set of calldata bytes into individual ERC721/1155 transfer calldata bytes
  * Creates a list of calldatas which can be decoded in decodeSingleNftData
  */
-export function atomicizeCallData(
+export function splitAtomicizeCallDatas(
     callDatas: Bytes,
     callDataLengths: BigInt[]): Bytes[] {
   const atomicizedCallData: Bytes[] = [];
@@ -106,8 +105,7 @@ export function atomicizeCallData(
 }
 
 /**
- * Calculate the price two orders would match at, if in fact they would match (otherwise fail)
- * Returns sellPrice for sell-side order maker (sale) and buyPrice for buy-side order maker (bid/offer)
+ * Calculate the prices the buy-side/sell-side orders match at.
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/exchange/ExchangeCore.sol#L460
  */
 export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
@@ -153,12 +151,10 @@ export function calculateMatchPrice(call: AtomicMatch_Call): BigInt {
 }
 
 /**
- * Calculate the settlement price of an order using Order paramters, basically reproducing:
+ * Compute final price based on if this is an auction if just a plain direct sale.
+ * References:
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/master/contracts/exchange/ExchangeCore.sol#L460
- * Returns basePrice if FixedPrice sale or calculate auction settle price if is Aucrion sale
  * https://github.com/ProjectWyvern/wyvern-ethereum/blob/bfca101b2407e4938398fccd8d1c485394db7e01/contracts/exchange/SaleKindInterface.sol#L70
- * NOTE: "now" keyword is simply an alias for block.timestamp
- * https://docs.soliditylang.org/en/v0.4.26/units-and-global-variables.html?highlight=now#block-and-transaction-properties
  */
 export function calculateFinalPrice(
     side: i32,
@@ -210,19 +206,17 @@ export function guardedArrayReplace(
 }
 
 /**
- * Decode Ethereum calldata of transferFrom/safeTransferFrom calls using function signature
+ * Decode calldata of transferFrom/safeTransferFrom calls using function selector
  * 0x23b872dd transferFrom(address,address,uint256)
  * 0x42842e0e safeTransferFrom(address,address,uint256)
- * https://www.4byte.directory/signatures/?bytes4_signature=0x23b872dd
- * https://www.4byte.directory/signatures/?bytes4_signature=0x42842e0e
  */
-export function decodeERC721TransferMethod(
+export function decodeERC721CallData(
     target: Address,
     callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
+  const data = Bytes.fromUint8Array(callData.subarray(4));
 
-  const decoded = ethereum.decode("(address,address,uint256)", cleanData)!.toTuple();
+  const decoded = ethereum.decode("(address,address,uint256)", data)!.toTuple();
   const senderAddress = decoded[0].toAddress();
   const recieverAddress = decoded[1].toAddress();
   const tokenId = decoded[2].toBigInt();
@@ -231,42 +225,16 @@ export function decodeERC721TransferMethod(
 }
 
 /**
- * Decode Ethereum calldata of safeTransferFrom call using function signature
- * 0xf242432a safeTransferFrom(address,address,uint256,uint256,bytes)
- * https://www.4byte.directory/signatures/?bytes4_signature=0xf242432a
- * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes)
- */
-export function decodeERC1155TransferResult(
-    target: Address,
-    callData: Bytes): DecodedCallDataResult {
-  const functionSelector = getFunctionSelector(callData);
-  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
-  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
-
-  const decoded = ethereum.decode("(address,address,uint256,uint256,bytes)", prefixedData)!.toTuple();
-  const senderAddress = decoded[0].toAddress();
-  const recieverAddress = decoded[1].toAddress();
-  const tokenId = decoded[2].toBigInt();
-  const amount = decoded[3].toBigInt();
-
-  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, target, tokenId, amount);
-}
-
-/**
- * Decode Ethereum calldata of matchERC721UsingCriteria/matchERC721WithSafeTransferUsingCriteria calls using function signature
+ * Decode calldata of matchERC721UsingCriteria/matchERC721WithSafeTransferUsingCriteria calls using function selector
  * 0xfb16a595 matchERC721UsingCriteria(address,address,address,uint256,bytes32,bytes32[])
  * 0xc5a0236e matchERC721WithSafeTransferUsingCriteria(address,address,address,uint256,bytes32,bytes32[])
- * https://www.4byte.directory/signatures/?bytes4_signature=0xfb16a595
- * https://www.4byte.directory/signatures/?bytes4_signature=0xc5a0236e
  * NOTE: needs ETHABI_DECODE_PREFIX to decode (contains arbitrary bytes/bytes array)
  * Ref: https://medium.com/@r2d2_68242/indexing-transaction-input-data-in-a-subgraph-6ff5c55abf20
  */
-export function decodeMatchERC721UsingCriteriaResult(
-    callData: Bytes): DecodedCallDataResult {
+export function decodeMatchERC721MatchUsingCriteria(callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
-  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
-
+  const data = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(data);
   const rawDecoded = ethereum.decode("(address,address,address,uint256,bytes32,bytes32[])", prefixedData);
 
   const decoded = rawDecoded!.toTuple();
@@ -279,14 +247,31 @@ export function decodeMatchERC721UsingCriteriaResult(
 }
 
 /**
- * Decode Ethereum calldata of matchERC1155UsingCriteria call using function signature
- * 0x96809f90 matchERC1155UsingCriteria(address,address,address,uint256,uint256,bytes32,bytes32[])
- * NOTE: needs ETHABI_DECODE_PREFIX to decode calldata contains arbitrary bytes/bytes array
+ * Decode calldata of safeTransferFrom call using function selector
+ * 0xf242432a safeTransferFrom(address,address,uint256,uint256,bytes)
  */
-export function decodeMatchERC1155UsingCriteriaResult(callData: Bytes): DecodedCallDataResult {
+export function decodeERC1155CallData(target: Address, callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  const cleanData = Bytes.fromUint8Array(callData.subarray(4));
-  const prefixedData = ETHABI_DECODE_PREFIX.concat(cleanData);
+  const data = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(data);
+
+  const decoded = ethereum.decode("(address,address,uint256,uint256,bytes)", prefixedData)!.toTuple();
+  const senderAddress = decoded[0].toAddress();
+  const recieverAddress = decoded[1].toAddress();
+  const tokenId = decoded[2].toBigInt();
+  const amount = decoded[3].toBigInt();
+
+  return new DecodedCallDataResult(functionSelector, senderAddress, recieverAddress, target, tokenId, amount);
+}
+
+/**
+ * Decode calldata of matchERC1155UsingCriteria call using function selector
+ * 0x96809f90 matchERC1155UsingCriteria(address,address,address,uint256,uint256,bytes32,bytes32[])
+ */
+export function decodeMatchERC1155MatchUsingCriteria(callData: Bytes): DecodedCallDataResult {
+  const functionSelector = getFunctionSelector(callData);
+  const data = Bytes.fromUint8Array(callData.subarray(4));
+  const prefixedData = ETHABI_DECODE_PREFIX.concat(data);
 
   const decoded = ethereum.decode("(address,address,address,uint256,uint256,bytes32,bytes32[])", prefixedData)!.toTuple();
   const senderAddress = decoded[0].toAddress();
@@ -299,9 +284,8 @@ export function decodeMatchERC1155UsingCriteriaResult(callData: Bytes): DecodedC
 }
 
 /**
- * Decode Ethereum calldata of atomicize call using function signature
+ * Decode calldata of atomicize call using function selector
  * 0x68f0bcaa atomicize(address[],uint256[],uint256[],bytes)
- * https://www.4byte.directory/signatures/?bytes4_signature=0x68f0bcaa
  */
 export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicCallDataResult {
   const cleanData = Bytes.fromUint8Array(callData.subarray(4));
@@ -313,7 +297,7 @@ export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicCallDataResul
   const callDataLengths = decoded[2].toBigIntArray();
   // actual calldata for each item
   const callDatas = decoded[3].toBytes();
-  const atomicizedCallDatas = atomicizeCallData(callDatas, callDataLengths);
+  const atomicizedCallDatas = splitAtomicizeCallDatas(callDatas, callDataLengths);
 
   return new DecodedAtomicCallDataResult(targets, atomicizedCallDatas);
 }
@@ -323,17 +307,14 @@ export function decodeAtomicizeCall(callData: Bytes): DecodedAtomicCallDataResul
  */
 export function decodeNftTransferResult(target: Address, callData: Bytes): DecodedCallDataResult {
   const functionSelector = getFunctionSelector(callData);
-  switch (functionSelector) {
-  case TRANSFER_FROM_SELECTOR:
-  case ERC721_SAFE_TRANSFER_FROM_SELECTOR:
-    return decodeERC721TransferMethod(target, callData);
-  case MATCH_ERC721_TRANSFER_FROM_SELECTOR:
-  case MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR:
-    return decodeMatchERC721UsingCriteriaResult(callData);
-  case ERC1155_SAFE_TRANSFER_FROM_SELECTOR:
-    return decodeERC1155TransferResult(target, callData);
-  default:
-    return decodeMatchERC1155UsingCriteriaResult(callData);
+  if (functionSelector == TRANSFER_FROM_SELECTOR || functionSelector == ERC721_SAFE_TRANSFER_FROM_SELECTOR) {
+    return decodeERC721CallData(target, callData);
+  } else if (functionSelector == MATCH_ERC721_TRANSFER_FROM_SELECTOR || functionSelector == MATCH_ERC721_SAFE_TRANSFER_FROM_SELECTOR) {
+    return decodeMatchERC721MatchUsingCriteria(callData);
+  } else if (functionSelector == ERC1155_SAFE_TRANSFER_FROM_SELECTOR) {
+    return decodeERC1155CallData(target, callData); 
+  } else {
+    return decodeMatchERC1155MatchUsingCriteria(callData);
   }
 }
 
@@ -351,7 +332,7 @@ export function getOrCreateAsset(assetID: string, tokenId: BigInt, collectionAdd
   if (!asset) {
     asset = new Asset(assetID)
     const contract = NftMetadata.bind(Address.fromString(collectionAddr));
-    const nftStandard = getNftStandard(collectionAddr);
+    const nftStandard = getNftProtocolStandard(collectionAddr);
     if (nftStandard == NftStandard.ERC721) {
       // ERC721 standard [[tokenURI]] interfacec to find the URI of the NFT asset.
       // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol#L93
@@ -378,7 +359,7 @@ export function getOrCreateCollection(collectionID: string): Collection {
   let collection = Collection.load(collectionID);
   if (!collection) {
     collection = new Collection(collectionID);
-    collection.nftStandard = getNftStandard(collectionID);
+    collection.nftStandard = getNftProtocolStandard(collectionID);
     const contract = NftMetadata.bind(Address.fromString(collectionID));
     if (!contract.try_name().reverted)
       collection.name = contract.try_name().value;
@@ -403,7 +384,7 @@ export function getOrCreateCollection(collectionID: string): Collection {
 /**
  * Try parse out the NFT standard from collectionID (i.e. the contract address) using ERC165 interface methods.
  */
-function getNftStandard(collectionID: string): string {
+function getNftProtocolStandard(collectionID: string): string {
   const erc165 = ERC165.bind(Address.fromString(collectionID));
   const isERC721Result = erc165.try_supportsInterface(Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER));
   if (!isERC721Result.reverted && isERC721Result.value)
@@ -417,7 +398,7 @@ function getNftStandard(collectionID: string): string {
 /**
  * Calculates trade/order price in BigDecimal.
  */
-export function calculateTradePriceETH(call: AtomicMatch_Call, paymentToken: Address): BigDecimal {
+export function calculateTradePriceInETH(call: AtomicMatch_Call, paymentToken: Address): BigDecimal {
   // NULL_ADDRESS means this is traded using ETH.
   // OpenSea techinically supports other token types, but we do not consider them for simplicity for now.
   return paymentToken == NULL_ADDRESS ? calculateMatchPrice(call).toBigDecimal().div(NUM_WEI_IN_ETH) : BIGDECIMAL_ZERO;
@@ -426,20 +407,20 @@ export function calculateTradePriceETH(call: AtomicMatch_Call, paymentToken: Add
 /**
  * Decode a single NFT transfer from calldata. If the call's functionSelector is not recognized, return null (ignored).
  */
-export function decodeSingleTransferResult(target: Address, callData: Bytes): DecodedCallDataResult|null {
+export function decodeSingleNftCallData(target: Address, callData: Bytes): DecodedCallDataResult|null {
   return validateCallDataFunctionSelector(callData) ? decodeNftTransferResult(target, callData) : null;
 }
 
 /**
  * Decode a bundled NFT tranfer from calldata. Ignore any transfer if the functionSelector is not recognized.
  */
-export function decodeBundleNftTransferResults(callDatas: Bytes): DecodedCallDataResult[] {
+export function decodeBundleNftCallData(callDatas: Bytes): DecodedCallDataResult[] {
   const decodedTransferResults: DecodedCallDataResult[] = [];
   const decodedAtomicizeResult = decodeAtomicizeCall(callDatas);
   for (let i = 0; i < decodedAtomicizeResult.targets.length; i++) {
     const target = decodedAtomicizeResult.targets[i];
     const calldata = decodedAtomicizeResult.callDatas[i];
-    const singleTransferResult = decodeSingleTransferResult(target, calldata)
+    const singleTransferResult = decodeSingleNftCallData(target, calldata)
     if (singleTransferResult) decodedTransferResults.push(singleTransferResult);
   }
   return decodedTransferResults;

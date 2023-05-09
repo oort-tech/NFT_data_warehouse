@@ -19,6 +19,16 @@ export const BUY = "BUY_SIDE";
 export const SELL = "SELL_SIDE";
 }
 
+export const NUM_WEI_IN_ETH = BigInt.fromI32(10).pow(18).toBigDecimal();
+// Defined in OpenSea WyvernExchange protocol:
+// https://github.com/ProjectWyvern/wyvern-ethereum/blob/master/contracts/exchange/ExchangeCore.sol#L79
+export const INVERSE_BASIS_POINT = BigDecimal.fromString("10000");
+
+export const BIGINT_ZERO = BigInt.zero();
+export const BIGINT_ONE = BigInt.fromI32(1);
+export const BIGDECIMAL_ZERO = BigDecimal.zero();
+export const BIGDECIMAL_HUNDRED = BigInt.fromI32(100).toBigDecimal();
+
 // Represents native ETH when used in the paymentToken field
 export const NULL_ADDRESS = Address.zero();
 
@@ -39,7 +49,7 @@ export const TRANSFER_FROM_SELECTOR = "0x23b872dd";
 export const ERC721_SAFE_TRANSFER_FROM_SELECTOR = "0x42842e0e";
 export const ERC1155_SAFE_TRANSFER_FROM_SELECTOR = "0xf242432a";
 
-// Function Selectors for MerkleValidator Methods (0xBAf2127B49fC93CbcA6269FAdE0F7F31dF4c88a7)
+// Function Selectors for MerkleValidator (0xBAf2127B49fC93CbcA6269FAdE0F7F31dF4c88a7)
 // 0xfb16a595 matchERC721UsingCriteria(address,address,address,uint256,bytes32,bytes32[])
 // 0xc5a0236e matchERC721WithSafeTransferUsingCriteria(address,address,address,uint256,bytes32,bytes32[])
 // 0x96809f90 matchERC1155UsingCriteria(address,address,address,uint256,uint256,bytes32,bytes32[])
@@ -53,14 +63,3 @@ export const ETHABI_DECODE_PREFIX = Bytes.fromHexString("00000000000000000000000
 export const ERC721_INTERFACE_IDENTIFIER = "0x80ac58cd";
 // https://eips.ethereum.org/EIPS/eip-1155#specification
 export const ERC1155_INTERFACE_IDENTIFIER = "0xd9b67a26";
-
-export const NUM_WEI_IN_ETH = BigInt.fromI32(10).pow(18).toBigDecimal();
-// Defined in OpenSea WyvernExchange protocol:
-// https://github.com/ProjectWyvern/wyvern-ethereum/blob/master/contracts/exchange/ExchangeCore.sol#L79
-export const INVERSE_BASIS_POINT = BigDecimal.fromString("10000");
-
-export const BIGINT_ZERO = BigInt.zero();
-export const BIGINT_ONE = BigInt.fromI32(1);
-export const BIGDECIMAL_ZERO = BigDecimal.zero();
-export const BIGDECIMAL_HUNDRED = BigInt.fromI32(100).toBigDecimal();
-export const BIGDECIMAL_MAX = BigInt.fromI32(i32.MAX_VALUE).toBigDecimal();
