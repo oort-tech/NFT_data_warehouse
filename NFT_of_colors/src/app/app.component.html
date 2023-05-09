@@ -1,0 +1,33 @@
+<div class="container text-center">
+  <div class="row my-4">
+    <div class="col-12">
+      <h1>My NFT Colors</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <div class="form-group">
+        <label for="token_color">Issue Token</label>
+        <input type="text" class="form-control"
+               id="token_color" aria-describedby="writeColorCode"
+               value="{{colorInput}}"
+               placeholder="Enter color in hex" (change)="colorInput = $event.target.value">
+      </div>
+    </div>
+    <div class="col-4"></div>
+  </div>
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <button type="submit" class="btn btn-primary text-center" (click)="mint()">Mint</button>
+    </div>
+    <div class="col-4"></div>
+  </div>
+  <div class="row" *ngIf="colors != null">
+    <div *ngFor="let color of colors" class="col-3 my-2">
+      <div class="token" [ngStyle]="{backgroundColor: color}"></div>
+      <div>{{color}}</div>
+    </div>
+  </div>
+</div>
