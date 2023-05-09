@@ -1,0 +1,3 @@
+# Seaport Exchange Smart Contracts
+
+These contracts were downloaded from [Etherscan](https://etherscan.io/address/0x00000000006c3852cbef3e08e8df289169ede581). For the most up to date contracts, you can find them [here](https://github.com/ProjectOpenSea/seaport/tree/main/contracts) on the official Seaport GitHub repo. Note that the subgraph created in this project index from the Seaport 1.1 smart contracts, but the contracts on the Seaport repo refer to the latest version (Seaport 1.5).

@@ -1,0 +1,29 @@
+specVersion: 0.0.4
+repository: https://github.com/amanichopra/opensea-marketplace-nft-indexer
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Seaport
+    network: mainnet
+    source:
+      address: "0x00000000006c3852cbef3e08e8df289169ede581"
+      abi: Seaport
+      startBlock: 14946565
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities: []
+      abis:
+        - name: Seaport
+          file: Seaport/abis/Seaport.json
+        - name: ERC165
+          file: Seaport/abis/ERC165.json
+        - name: NFTMetadata
+          file: Seaport/abis/NFTMetadata.json
+      eventHandlers:
+        - event: OrderFulfilled(bytes32,indexed address,indexed
+            address,address,(uint8,address,uint256,uint256)[],(uint8,address,uint256,uint256,address)[])
+          handler: handleOrderFulfilled
+      file: Seaport/Seaport.wasm
